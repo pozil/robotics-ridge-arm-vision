@@ -1,2 +1,2 @@
-# tdx18-robotics-arm-vision
-TDX18 Robotics - Arm vision
+# TDX18 Robotics - ARM vision running on Raspberry Pi
+
