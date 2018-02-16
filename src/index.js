@@ -1,5 +1,6 @@
 // Load .env configuration file
 require('dotenv').config();
+const Log = require('./logging.js');
 
 const httpClient = require("request");
 
@@ -29,16 +30,16 @@ cometd.registerExtension('timestamp', new TimeStampExtension());
 // Authenticate with Salesforce
 const SalesforceClient = require('salesforce-node-client');
 var sfdcSession = null;
+Log.info('Authenticating with Salesforce...');
 const sfdcClient = new SalesforceClient();
 sfdcClient.auth.password({
   username: process.env.sfdcUsername,
   password: process.env.sfdcPassword
-}, function(error, payload) {
-  // TODO: check session timetout
-
+}, (error, payload) => {
   if (error) {
-    return console.error('Failed to authenticate with Salesforce', error);
+    return Log.error('Failed to authenticate with Salesforce', error);
   }
+  Log.info('Successfully authenticated with Salesforce.');
   sfdcSession = payload;
 
   // Configure the CometD object.
@@ -49,30 +50,35 @@ sfdcClient.auth.password({
   });
 
   // Handshake with the server and subscribe to the PE.
-  cometd.handshake(function (handshake) {
+  Log.info('Connecting to CometD server...');
+  cometd.handshake((handshake) => {
     if (handshake.successful) {
+      Log.info('Successfully connected to CometD server.');
       // Subscribe to receive messages from the server.
       cometd.subscribe(TOPIC_ARM_IMAGE_REQUESTED, onArmImageRequested);
-      console.log('CometD subscribed to ' + TOPIC_ARM_IMAGE_REQUESTED + ' successfully');
+      Log.info('CometD subscribed to ' + TOPIC_ARM_IMAGE_REQUESTED + ' successfully');
     } else {
-      console.log('Unable to connect to CometD ' + JSON.stringify(handshake));
+      Log.error('Unable to connect to CometD ' + JSON.stringify(handshake));
     }
   });
 });
 
-
-function onArmImageRequested(platformEvent) {
-  console.log('ARM image requested');
+/**
+ * Platform Event callback for ARM image request
+ * @param {*} platformEvent
+ */
+onArmImageRequested = (platformEvent) => {
+  Log.info('ARM image requested');
   camera.takePhoto().then((photo) => {
     // Send image to apex REST resource
     const apiRequestOptions = sfdcClient.apex.createApexRequest(sfdcSession, 'ArmVision/');
     apiRequestOptions.headers['Content-Type'] = 'image/jpg';
     apiRequestOptions.body = photo;
-    httpClient.post(apiRequestOptions, function (error, payload) {
+    httpClient.post(apiRequestOptions, (error, payload) => {
       if (error) {
-        return console.error('Failed to send photo', error);
+        return Log.error('Failed to send ARM image', error);
       }
-      console.log('Photo sent')
+      Log.info('Successfully sent ARM image')
     });
   });
 }
