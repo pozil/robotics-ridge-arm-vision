@@ -71,7 +71,7 @@ onArmImageRequested = (platformEvent) => {
   Log.info('ARM image requested');
   camera.takePhoto().then((photo) => {
     // Send image to apex REST resource
-    const apiRequestOptions = sfdcClient.apex.createApexRequest(sfdcSession, 'ArmVision/');
+    const apiRequestOptions = sfdcClient.apex.createApexRequest(sfdcSession, 'ArmVision/'+ process.env.deviceId);
     apiRequestOptions.headers['Content-Type'] = 'image/jpg';
     apiRequestOptions.body = photo;
     httpClient.post(apiRequestOptions, (error, payload) => {
