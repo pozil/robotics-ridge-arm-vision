@@ -1,8 +1,9 @@
 // Load .env configuration file
 require('dotenv').config();
-const Log = require('./logging.js');
+const Log = require('./logging.js'),
+  httpClient = require("request");
 
-const httpClient = require("request");
+Log.info('Starting vision service for device '+ process.env.deviceId);
 
 // Configure Raspberry Pi Camera
 const Raspistill = require('node-raspistill').Raspistill;
@@ -56,7 +57,7 @@ sfdcClient.auth.password({
       Log.info('Successfully connected to CometD server.');
       // Subscribe to receive messages from the server.
       cometd.subscribe(TOPIC_ARM_IMAGE_REQUESTED, onArmImageRequested);
-      Log.info('CometD subscribed to ' + TOPIC_ARM_IMAGE_REQUESTED + ' successfully');
+      Log.info('Successfully subscribed to topic ' + TOPIC_ARM_IMAGE_REQUESTED);
     } else {
       Log.error('Unable to connect to CometD ' + JSON.stringify(handshake));
     }
@@ -68,6 +69,11 @@ sfdcClient.auth.password({
  * @param {*} platformEvent
  */
 onArmImageRequested = (platformEvent) => {
+  // Only consider requests for this device
+  if (platformEvent.data.payload.Device_Id__c !== process.env.deviceId) {
+    return;
+  }
+
   Log.info('ARM image requested');
   camera.takePhoto().then((photo) => {
     // Send image to apex REST resource
