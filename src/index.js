@@ -74,11 +74,14 @@ onArmImageRequested = (platformEvent) => {
     const apiRequestOptions = sfdcClient.apex.createApexRequest(sfdcSession, 'ArmVision/'+ process.env.deviceId);
     apiRequestOptions.headers['Content-Type'] = 'image/jpg';
     apiRequestOptions.body = photo;
-    httpClient.post(apiRequestOptions, (error, payload) => {
-      if (error) {
-        return Log.error('Failed to send ARM image', error);
+    httpClient.post(apiRequestOptions, (error, response, body) => {
+      if (response && response.statusCode !== 200) {
+        Log.error('Failed to send ARM image (HTTP '+ response.statusCode +')', body);
+      } else if (error) {
+        Log.error('Failed to send ARM image', error);
+      } else {
+        Log.info('Successfully sent ARM image')
       }
-      Log.info('Successfully sent ARM image')
     });
   });
 }
