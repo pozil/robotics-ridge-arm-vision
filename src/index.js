@@ -3,7 +3,9 @@ require('dotenv').config();
 const Log = require('./logging.js'),
   httpClient = require("request");
 
-Log.info('Starting vision service for device '+ process.env.deviceId);
+const DEVICE_ID = process.env.deviceId || require('os').hostname();
+
+Log.info('Starting vision service for device '+ DEVICE_ID);
 
 // Configure Raspberry Pi Camera
 const Raspistill = require('node-raspistill').Raspistill;
@@ -70,14 +72,14 @@ sfdcClient.auth.password({
  */
 onArmImageRequested = (platformEvent) => {
   // Only consider requests for this device
-  if (platformEvent.data.payload.Device_Id__c !== process.env.deviceId) {
+  if (platformEvent.data.payload.Device_Id__c !== DEVICE_ID) {
     return;
   }
 
   Log.info('ARM image requested');
   camera.takePhoto().then((photo) => {
     // Send image to apex REST resource
-    const apiRequestOptions = sfdcClient.apex.createApexRequest(sfdcSession, 'ArmVision/'+ process.env.deviceId);
+    const apiRequestOptions = sfdcClient.apex.createApexRequest(sfdcSession, 'ArmVision/'+ DEVICE_ID);
     apiRequestOptions.headers['Content-Type'] = 'image/jpg';
     apiRequestOptions.body = photo;
     httpClient.post(apiRequestOptions, (error, response, body) => {
