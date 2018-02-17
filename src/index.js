@@ -73,7 +73,7 @@ sfdcClient.auth.password({
 onArmImageRequested = (platformEvent) => {
   // Only consider requests for this device
   if (platformEvent.data.payload.Device_Id__c !== DEVICE_ID) {
-    return;
+    return Log.info('Ignoring image request for '+ platformEvent.data.payload.Device_Id__c);;
   }
 
   Log.info('ARM image requested');
