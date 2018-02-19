@@ -1,9 +1,11 @@
 // Load .env configuration file
 require('dotenv').config();
 const Log = require('./logging.js'),
-  httpClient = require("request");
+  httpClient = require("request"),
+  SalesforceClient = require('salesforce-node-client'),
+  os = require('os');
 
-const DEVICE_ID = process.env.deviceId || require('os').hostname();
+const DEVICE_ID = process.env.deviceId || os.hostname();
 
 Log.info('Starting vision service for device '+ DEVICE_ID);
 
@@ -30,41 +32,103 @@ const cometd = new cometdlib.CometD();
 const TimeStampExtension = require('cometd/TimeStampExtension');
 cometd.registerExtension('timestamp', new TimeStampExtension());
 
-// Authenticate with Salesforce
-const SalesforceClient = require('salesforce-node-client');
+// Prepare Salesforce client
 var sfdcSession = null;
-Log.info('Authenticating with Salesforce...');
 const sfdcClient = new SalesforceClient();
-sfdcClient.auth.password({
-  username: process.env.sfdcUsername,
-  password: process.env.sfdcPassword
-}, (error, payload) => {
-  if (error) {
-    return Log.error('Failed to authenticate with Salesforce', error);
-  }
-  Log.info('Successfully authenticated with Salesforce.');
-  sfdcSession = payload;
 
-  // Configure the CometD object.
-  cometd.configure({
-    url: sfdcSession.instance_url + '/cometd/40.0/',
-    requestHeaders: { Authorization: 'Bearer ' + sfdcSession.access_token },
-    appendMessageTypeToURL: false
-  });
 
-  // Handshake with the server and subscribe to the PE.
-  Log.info('Connecting to CometD server...');
-  cometd.handshake((handshake) => {
-    if (handshake.successful) {
-      Log.info('Successfully connected to CometD server.');
-      // Subscribe to receive messages from the server.
-      cometd.subscribe(TOPIC_ARM_IMAGE_REQUESTED, onArmImageRequested);
-      Log.info('Successfully subscribed to topic ' + TOPIC_ARM_IMAGE_REQUESTED);
+waitForInternetThenStartApp = () => {
+  httpClient.get({url: 'https://status.salesforce.com/status', timeout: 5000}, (error, response, body) => {
+    if (!response || response.statusCode !== 404) {
+      Log.error('No internet connection available, retrying...');
+      waitForInternetThenStartApp();
     } else {
-      Log.error('Unable to connect to CometD ' + JSON.stringify(handshake));
+      startApp();
     }
   });
-});
+}
+
+startApp = () => {
+  // Authenticate with Salesforce
+  Log.info('Authenticating with Salesforce...');
+  sfdcClient.auth.password({
+    username: process.env.sfdcUsername,
+    password: process.env.sfdcPassword
+  }, (error, payload) => {
+    if (error) {
+      return Log.error('Failed to authenticate with Salesforce', error);
+    }
+    Log.info('Successfully authenticated with Salesforce.');
+    sfdcSession = payload;
+
+    // Send device IP to Salesforce
+    sendDeviceIpToSalesforce();
+
+    // Configure the CometD object.
+    cometd.configure({
+      url: sfdcSession.instance_url + '/cometd/41.0/',
+      requestHeaders: { Authorization: 'Bearer ' + sfdcSession.access_token },
+      appendMessageTypeToURL: false
+    });
+
+    // Handshake with the server and subscribe to the PE.
+    Log.info('Connecting to CometD server...');
+    cometd.handshake((handshake) => {
+      if (handshake.successful) {
+        Log.info('Successfully connected to CometD server.');
+        // Subscribe to receive messages from the server.
+        cometd.subscribe(TOPIC_ARM_IMAGE_REQUESTED, onArmImageRequested);
+        Log.info('Successfully subscribed to topic ' + TOPIC_ARM_IMAGE_REQUESTED);
+      } else {
+        Log.error('Unable to connect to CometD ' + JSON.stringify(handshake));
+      }
+    });
+  });
+}
+
+/**
+ * Send device local IP to Salesforce
+ */
+sendDeviceIpToSalesforce = () => {
+  // Get local IPv4 address
+  const ifaces = os.networkInterfaces();
+  let ip = null;
+  Object.keys(ifaces).forEach(function (ifname) {
+    ifaces[ifname].forEach(function (iface) {
+      if ('IPv4' !== iface.family || iface.internal !== false) {
+        // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
+        return;
+      }
+      ip = iface.address;
+    });
+  });
+  // Get record Id and push IP to Salesforce
+  Log.info('Reporting device IP to Salesforce: '+ ip);
+  const query = encodeURI("SELECT Id FROM Device__c WHERE Device_Id__c='"+ DEVICE_ID +"'");
+  const apiRequestOptions = sfdcClient.data.createDataRequest(sfdcSession, 'query?q='+ query);
+  httpClient.get(apiRequestOptions, function (error, response, body) {
+    if (response && response.statusCode < 200 && response.statusCode > 299) {
+      return Log.error('Failed to retrieve device record id (HTTP '+ response.statusCode +')', body);
+    } else if (error) {
+      return Log.error('Failed to retrieve device record id', error);
+    }
+    const data = JSON.parse(body);
+    if (data.records.length == 0) {
+      return Log.error('Failed to find device with Device_Id__c='+ DEVICE_ID +' in Salesforce', error);
+    }
+    const recordId = data.records[0].Id;
+    // Push IP to Salesforce
+    const apiRequestOptions = sfdcClient.data.createDataRequest(sfdcSession, 'sobjects/Device__c/'+ recordId);
+    apiRequestOptions.body = '{"Last_Known_IP__c": "'+ ip +'"}';
+    httpClient.patch(apiRequestOptions, (error, response, body) => {
+      if (response && response.statusCode < 200 && response.statusCode > 299) {
+        Log.error('Failed to send device IP (HTTP '+ response.statusCode +')', body);
+      } else if (error) {
+        Log.error('Failed to send device IP', error);
+      }
+    });
+  });
+}
 
 /**
  * Platform Event callback for ARM image request
@@ -83,7 +147,7 @@ onArmImageRequested = (platformEvent) => {
     apiRequestOptions.headers['Content-Type'] = 'image/jpg';
     apiRequestOptions.body = photo;
     httpClient.post(apiRequestOptions, (error, response, body) => {
-      if (response && response.statusCode !== 200) {
+      if (response && response.statusCode < 200 && response.statusCode > 299) {
         Log.error('Failed to send ARM image (HTTP '+ response.statusCode +')', body);
       } else if (error) {
         Log.error('Failed to send ARM image', error);
@@ -93,3 +157,8 @@ onArmImageRequested = (platformEvent) => {
     });
   });
 }
+
+
+// Wait for internet access then start app
+Log.info('Checking internet connection...');
+waitForInternetThenStartApp();

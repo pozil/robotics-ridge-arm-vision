@@ -14,7 +14,7 @@
         "dotenv": "^5.0.0",
         "node-raspistill": "0.0.14",
         "request": "^2.83.0",
-        "salesforce-node-client": "^1.2.0",
+        "salesforce-node-client": "^1.2.2",
         "ws": "^4.0.0"
     },
     "scripts": {
