@@ -5,6 +5,7 @@ npm-debug.log
 # Local development
 .env
 .DS_Store
+/coverage
 
 # Execution resources
 pid

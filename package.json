@@ -1,6 +1,6 @@
 {
     "name": "tdx18-robotics-arm-vision",
-    "version": "0.0.2",
+    "version": "0.1.0",
     "author": "Philippe Ozil",
     "description": "TDX18 Robotics - ARM vision running on Raspberry Pi",
     "private": true,
@@ -11,14 +11,23 @@
     "dependencies": {
         "cometd": "^3.1.3",
         "cometd-nodejs-client": "^1.0.2",
-        "dotenv": "^5.0.0",
+        "dotenv": "^5.0.1",
         "node-raspistill": "0.0.14",
         "request": "^2.83.0",
         "salesforce-node-client": "^1.2.2",
-        "ws": "^4.0.0"
+        "serialport": "^6.1.1",
+        "winston": "^2.4.0",
+        "ws": "^4.1.0"
+    },
+    "devDependencies": {
+        "istanbul": "^0.4.5",
+        "jshamcrest": "^0.7.1",
+        "nodeunit": "^0.11.2",
+        "sinon": "^4.4.2"
     },
     "scripts": {
-        "start": "node src/index.js"
+        "start": "node src/index.js",
+        "test": "istanbul cover nodeunit test"
     },
     "repository": {
         "type": "git",
