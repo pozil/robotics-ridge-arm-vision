@@ -91,7 +91,7 @@ module.exports = class IoSequencer extends EventEmitter {
       } else {
         // Set response read timeout
         this.readTimeout = setTimeout(() => {
-          LOG.error('Response read timeout. Request:', ByteUtils.bytesToString(ioSequence.writtenBytes), 'Expected response size:', ioSequence.readByteLength);
+          LOG.warn('Response read timeout. Request:', ByteUtils.bytesToString(ioSequence.writtenBytes), 'Expected response size:', ioSequence.readByteLength);
           this.emit('readTimeout', ioSequence.writtenBytes, ioSequence.readByteLength);
         }, Protocol.READ_TIMEOUT);
       }

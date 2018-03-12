@@ -92,7 +92,7 @@ module.exports = class SalesforcePlatform {
       });
     });
     // Get record Id and push IP to Salesforce
-    LOG.info('Reporting device IP to Salesforce: '+ ip);
+    LOG.info('Reporting '+ this.deviceId +' IP to Salesforce: '+ ip);
     const query = encodeURI("SELECT Id FROM Device__c WHERE Device_Id__c='"+ this.deviceId +"'");
     const apiRequestOptions = this.client.data.createDataRequest(this.session, 'query?q='+ query);
     httpClient.get(apiRequestOptions, function (error, response, body) {
