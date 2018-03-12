@@ -26,7 +26,7 @@ const cometd = new cometdlib.CometD();
 module.exports = class SalesforcePlatform {
 
   constructor(deviceId) {
-    this.devideId = deviceId;
+    this.deviceId = deviceId;
     this.session = null;
     this.client = new SalesforceClient();
   }
