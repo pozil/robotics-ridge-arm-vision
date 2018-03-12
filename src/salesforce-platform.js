@@ -82,8 +82,8 @@ module.exports = class SalesforcePlatform {
     // Get local IPv4 address
     const ifaces = os.networkInterfaces();
     let ip = null;
-    Object.keys(ifaces).forEach(function (ifname) {
-      ifaces[ifname].forEach(function (iface) {
+    Object.keys(ifaces).forEach((ifname) => {
+      ifaces[ifname].forEach((iface) => {
         if ('IPv4' !== iface.family || iface.internal !== false) {
           // skip over internal (i.e. 127.0.0.1) and non-ipv4 addresses
           return;
@@ -95,7 +95,7 @@ module.exports = class SalesforcePlatform {
     LOG.info('Reporting '+ this.deviceId +' IP to Salesforce: '+ ip);
     const query = encodeURI("SELECT Id FROM Device__c WHERE Device_Id__c='"+ this.deviceId +"'");
     const apiRequestOptions = this.client.data.createDataRequest(this.session, 'query?q='+ query);
-    httpClient.get(apiRequestOptions, function (error, response, body) {
+    httpClient.get(apiRequestOptions, (error, response, body) => {
       if (response && response.statusCode < 200 && response.statusCode > 299) {
         return LOG.error('Failed to retrieve device record id (HTTP '+ response.statusCode +')', body);
       } else if (error) {
