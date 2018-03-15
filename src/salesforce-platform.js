@@ -127,13 +127,13 @@ module.exports = class SalesforcePlatform {
       apiRequestOptions.body = picture;
       httpClient.post(apiRequestOptions, (error, response, body) => {
         if (response && response.statusCode < 200 && response.statusCode > 299) {
-          LOG.error('Failed to send ARM image (HTTP '+ response.statusCode +')', body);
+          LOG.error('Failed to upload ARM image (HTTP '+ response.statusCode +')', body);
           reject();
         } else if (error) {
-          LOG.error('Failed to send ARM image', error);
+          LOG.error('Failed to upload ARM image', error);
           reject();
         }
-        LOG.info('Successfully sent ARM image')
+        LOG.info('Successfully uploaded ARM image')
         resolve();
       });
     });
