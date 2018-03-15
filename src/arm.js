@@ -66,10 +66,7 @@ module.exports = class ARM {
       {channel: 1, target: 1300},
       {channel: 4, target: 1450},
       {channel: 5, target: 2000},
-    ])
-    .then(() => {
-      return sleep(9000);
-    });
+    ]);
   }
 
   capturePicture() {
