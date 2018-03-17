@@ -11,8 +11,8 @@ const LOG = Winston.loggers.get('SFDC');
 
 
 // Topic paths for the Platform Events
-const TOPIC_ARM_IMAGE_REQUESTED = '/event/ARM_Image_Requested__e';
 const TOPIC_ARM_PICKUP_REQUESTED = '/event/ARM_Pickup_Requested__e';
+const TOPIC_ARM_PICKUP_CONFIRMED = '/event/ARM_Pickup_Confirmed__e';
 
 // Enable WebSockets for CometD
 var window = {};
@@ -31,7 +31,7 @@ module.exports = class SalesforcePlatform {
     this.client = new SalesforceClient();
   }
 
-  init(onArmImageRequested) {
+  init(onArmPickupRequested, onArmPickupConfirmed) {
     return new Promise((resolve, reject) => {
       // Authenticate with Salesforce
       LOG.info('Authenticating with Salesforce...');
@@ -62,8 +62,9 @@ module.exports = class SalesforcePlatform {
           if (handshake.successful) {
             LOG.debug('Successfully connected to CometD server.');
             // Subscribe to receive messages from the server.
-            cometd.subscribe(TOPIC_ARM_IMAGE_REQUESTED, onArmImageRequested);
-            LOG.info('Successfully subscribed to topic ' + TOPIC_ARM_IMAGE_REQUESTED);
+            cometd.subscribe(TOPIC_ARM_PICKUP_REQUESTED, onArmPickupRequested);
+            cometd.subscribe(TOPIC_ARM_PICKUP_CONFIRMED, onArmPickupConfirmed);
+            LOG.debug('Successfully subscribed to Platform Events');
             resolve();
           } else {
             const message = 'Unable to connect to CometD ' + JSON.stringify(handshake);
@@ -119,7 +120,7 @@ module.exports = class SalesforcePlatform {
     });
   }
 
-  // Sendd image to apex REST resource
+  // Send image to apex REST resource
   uploadPicture(picture) {
     return new Promise((resolve, reject) => {
       const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'ArmVision/'+ this.deviceId);
@@ -131,9 +132,27 @@ module.exports = class SalesforcePlatform {
           reject();
         } else if (error) {
           LOG.error('Failed to upload ARM image', error);
-          reject();
+          reject(error);
         }
         LOG.info('Successfully uploaded ARM image')
+        resolve();
+      });
+    });
+  }
+
+  notifyPickupCompleted() {
+    return new Promise((resolve, reject) => {
+      const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/ARM_Pickup_Confirmed__e');
+      apiRequestOptions.body = '{"Device_Id__c": "'+ this.deviceId +'"}';
+      httpClient.put(apiRequestOptions, (error, response, body) => {
+        if (response && response.statusCode < 200 && response.statusCode > 299) {
+          LOG.error('Failed to send ARM_Pickup_Confirmed__e Platform Event (HTTP '+ response.statusCode +')', body);
+          reject();
+        } else if (error) {
+          LOG.error('Failed to send ARM_Pickup_Confirmed__e Platform Event', error);
+          reject(error);
+        }
+        LOG.info('Successfully notified pickup completion');
         resolve();
       });
     });
