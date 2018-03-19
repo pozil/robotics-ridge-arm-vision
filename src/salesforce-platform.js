@@ -142,14 +142,14 @@ module.exports = class SalesforcePlatform {
 
   notifyPickupCompleted() {
     return new Promise((resolve, reject) => {
-      const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/ARM_Pickup_Confirmed__e');
+      const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/ARM_Pickup_Completed__e');
       apiRequestOptions.body = '{"Device_Id__c": "'+ this.deviceId +'"}';
-      httpClient.put(apiRequestOptions, (error, response, body) => {
+      httpClient.post(apiRequestOptions, (error, response, body) => {
         if (response && response.statusCode < 200 && response.statusCode > 299) {
-          LOG.error('Failed to send ARM_Pickup_Confirmed__e Platform Event (HTTP '+ response.statusCode +')', body);
+          LOG.error('Failed to send ARM_Pickup_Completed__e Platform Event (HTTP '+ response.statusCode +')', body);
           reject();
         } else if (error) {
-          LOG.error('Failed to send ARM_Pickup_Confirmed__e Platform Event', error);
+          LOG.error('Failed to send ARM_Pickup_Completed__e Platform Event', error);
           reject(error);
         }
         LOG.info('Successfully notified pickup completion');
