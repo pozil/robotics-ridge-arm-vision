@@ -63,7 +63,7 @@ module.exports = class ARM {
     // Move above object, lower arm, rotate wrist and open claw
     return this.maestro.setTargets([
       {channel: 0, target: 1700},
-      {channel: 1, target: 1300},
+      {channel: 1, target: 1200},
       {channel: 4, target: 1450},
       {channel: 5, target: 2000},
     ]);
