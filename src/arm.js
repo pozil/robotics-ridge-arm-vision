@@ -64,6 +64,7 @@ module.exports = class ARM {
     return this.maestro.setTargets([
       {channel: 0, target: 1700},
       {channel: 1, target: 1200},
+      {channel: 3, target: 1700},
       {channel: 4, target: 1450},
       {channel: 5, target: 2000},
     ]);
@@ -77,7 +78,10 @@ module.exports = class ARM {
   grabAndTransferPayload() {
     LOG.debug('Grabing and tranfering payload');
     // Lower arm
-    return this.maestro.setTarget(1, 1100)
+    return this.maestro.setTargets([
+      {channel: 1, target: 1100},
+      {channel: 3, target: 1500},
+    ])
     .then(() => {
       return sleep(1500);
     })
