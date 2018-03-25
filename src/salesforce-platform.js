@@ -25,8 +25,9 @@ const cometd = new cometdlib.CometD();
 
 module.exports = class SalesforcePlatform {
 
-  constructor(deviceId) {
-    this.deviceId = deviceId;
+  constructor(hostname) {
+    this.hostname = hostname;
+    this.device = null;
     this.session = null;
     this.client = new SalesforceClient();
   }
@@ -93,8 +94,8 @@ module.exports = class SalesforcePlatform {
       });
     });
     // Get record Id and push IP to Salesforce
-    LOG.info('Reporting '+ this.deviceId +' IP to Salesforce: '+ ip);
-    const query = encodeURI("SELECT Id FROM Device__c WHERE Device_Id__c='"+ this.deviceId +"'");
+    LOG.info('Reporting '+ this.hostname +' IP to Salesforce: '+ ip);
+    const query = encodeURI("SELECT Id, Feed__c FROM Device__c WHERE Hostname__c='"+ this.hostname +"'");
     const apiRequestOptions = this.client.data.createDataRequest(this.session, 'query?q='+ query);
     httpClient.get(apiRequestOptions, (error, response, body) => {
       if (response && response.statusCode < 200 && response.statusCode > 299) {
@@ -104,12 +105,12 @@ module.exports = class SalesforcePlatform {
       }
       const data = JSON.parse(body);
       if (data.records.length == 0) {
-        return LOG.error('Failed to find device with Device_Id__c='+ this.deviceId +' in Salesforce', error);
+        return LOG.error('Failed to find device with Hostname__c='+ this.hostname +' in Salesforce', error);
       }
-      const recordId = data.records[0].Id;
-      LOG.debug('Found remote '+ this.deviceId +' device', recordId);
+      this.device = data.records[0];
+      LOG.debug('Found remote '+ this.hostname +' device', this.device.Id);
       // Push IP to Salesforce
-      const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/Device__c/'+ recordId);
+      const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/Device__c/'+ this.device.Id);
       apiRequestOptions.body = '{"Last_Known_IP__c": "'+ ip +'"}';
       httpClient.patch(apiRequestOptions, (error, response, body) => {
         if (response && response.statusCode < 200 && response.statusCode > 299) {
@@ -117,7 +118,7 @@ module.exports = class SalesforcePlatform {
         } else if (error) {
           LOG.error('Failed to send device IP', error);
         }
-        LOG.debug('Updated remote '+ this.deviceId +' device IP');
+        LOG.debug('Updated remote '+ this.hostname +' device IP');
       });
     });
   }
@@ -125,7 +126,7 @@ module.exports = class SalesforcePlatform {
   // Send image to apex REST resource
   uploadPicture(picture) {
     return new Promise((resolve, reject) => {
-      const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'ArmVision/'+ this.deviceId);
+      const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'ArmVision/'+ this.device.Id);
       apiRequestOptions.headers['Content-Type'] = 'image/jpg';
       apiRequestOptions.body = picture;
       httpClient.post(apiRequestOptions, (error, response, body) => {
@@ -145,7 +146,7 @@ module.exports = class SalesforcePlatform {
   notifyPickupCompleted() {
     return new Promise((resolve, reject) => {
       const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/ARM_Pickup_Completed__e');
-      apiRequestOptions.body = '{"Device_Id__c": "'+ this.deviceId +'"}';
+      apiRequestOptions.body = '{"Device_Id__c": "'+ this.device.Id +'", "Feed_Id__c": "'+  this.device.Feed__c +'"}';
       httpClient.post(apiRequestOptions, (error, response, body) => {
         if (response && response.statusCode < 200 && response.statusCode > 299) {
           LOG.error('Failed to send ARM_Pickup_Completed__e Platform Event (HTTP '+ response.statusCode +')', body);

@@ -5,7 +5,7 @@ const Winston = require('winston'),
   SalesforcePlatform = require('./src/salesforce-platform'),
   os = require('os');
 
-const DEVICE_ID = process.env.deviceId || os.hostname();
+const HOSTNAME = process.env.deviceId || os.hostname();
 
 // Configure logs
 Winston.loggers.add('App', {
@@ -24,7 +24,7 @@ process.on('unhandledRejection', (reason, p) => {
   LOG.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 });
 
-const sfdc = new SalesforcePlatform(DEVICE_ID);
+const sfdc = new SalesforcePlatform(HOSTNAME);
 const arm = new ARM();
 
 
@@ -40,10 +40,10 @@ waitForInternetThenStartApp = () => {
 }
 
 startApp = () => {
-  Promise.all([
-    sfdc.init(onArmPickupRequested, onArmPickupConfirmed),
-    arm.init(),
-  ])
+  sfdc.init(onArmPickupRequested, onArmPickupConfirmed)
+  .then(() => {
+    return arm.init();
+  })
   .catch((error) => {
     LOG.error(error);
   });
