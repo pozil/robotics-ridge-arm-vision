@@ -107,6 +107,7 @@ module.exports = class SalesforcePlatform {
         return LOG.error('Failed to find device with Device_Id__c='+ this.deviceId +' in Salesforce', error);
       }
       const recordId = data.records[0].Id;
+      LOG.debug('Found remote '+ this.deviceId +' device', recordId);
       // Push IP to Salesforce
       const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/Device__c/'+ recordId);
       apiRequestOptions.body = '{"Last_Known_IP__c": "'+ ip +'"}';
@@ -116,6 +117,7 @@ module.exports = class SalesforcePlatform {
         } else if (error) {
           LOG.error('Failed to send device IP', error);
         }
+        LOG.debug('Updated remote '+ this.deviceId +' device IP');
       });
     });
   }

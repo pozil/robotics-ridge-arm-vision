@@ -16,6 +16,7 @@ const LOG = Winston.loggers.get('App');
 Winston.default.transports.console.level='debug';
 Winston.loggers.get('App').transports.console.level='debug';
 Winston.loggers.get('ARM').transports.console.level='debug';
+Winston.loggers.get('SFDC').transports.console.level='debug';
 
 
 process.on('warning', e => console.warn(e.stack));
