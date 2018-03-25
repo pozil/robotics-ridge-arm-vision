@@ -5,7 +5,7 @@ const Winston = require('winston'),
   SalesforcePlatform = require('./src/salesforce-platform'),
   os = require('os');
 
-const HOSTNAME = process.env.deviceId || os.hostname();
+const HOSTNAME = process.env.hostname || os.hostname();
 
 // Configure logs
 Winston.loggers.add('App', {
