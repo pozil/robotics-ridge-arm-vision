@@ -42,7 +42,7 @@ waitForInternetThenStartApp = () => {
 startApp = () => {
   sfdc.init(onArmPickupRequested, onArmPickupConfirmed)
   .then(() => {
-    return arm.init();
+    return arm.init(true);
   })
   .catch((error) => {
     LOG.error(error);

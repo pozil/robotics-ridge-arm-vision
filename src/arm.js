@@ -32,15 +32,20 @@ module.exports = class ARM {
     });
   }
 
-  init() {
+  init(shouldReturnToHome=true) {
     LOG.debug('Connecting to Maestro');
-    return this.maestro.connect()
-    .then(() => {
-      return this.goHome();
-    })
-    .then(() => {
-      return sleep(6000);
-    });
+    if (shouldReturnToHome) {
+      return this.maestro.connect()
+      .then(() => {
+        return this.goHome();
+      })
+      .then(() => {
+        return sleep(6000);
+      });
+    }
+    else {
+      return this.maestro.connect();
+    }
   }
 
   disconnect() {
@@ -62,10 +67,11 @@ module.exports = class ARM {
     LOG.debug('Moving to capture picture');
     // Move above object, lower arm, rotate wrist and open claw
     return this.maestro.setTargets([
-      {channel: 0, target: 1700},
-      {channel: 1, target: 1200},
-      {channel: 3, target: 1700},
-      {channel: 4, target: 1450},
+      {channel: 0, target: 1220},
+      {channel: 1, target: 1400},
+      {channel: 2, target: 1330},
+      {channel: 3, target: 1840},
+      {channel: 4, target: 1430},
       {channel: 5, target: 2000},
     ]);
   }
@@ -79,28 +85,36 @@ module.exports = class ARM {
     LOG.debug('Grabing and tranfering payload');
     // Lower arm
     return this.maestro.setTargets([
-      {channel: 1, target: 1100},
-      {channel: 3, target: 1500},
+      {channel: 1, target: 1050},
+      {channel: 2, target: 1500},
     ])
     .then(() => {
-      return sleep(1500);
+      return sleep(6500);
     })
     .then(() => {
       // Close claw
-      return this.maestro.setTarget(5, 1325);
+      return this.maestro.setTarget(5, 1150);
     })
     .then(() => {
       return sleep(1000);
     })
     .then(() => {
+      // Start to raise arm
+      return this.maestro.setTarget(1, 1500);
+    })
+    .then(() => {
+      return sleep(6000);
+    })
+    .then(() => {
       // Turns away from object and raise arm
       return this.maestro.setTargets([
-        {channel: 0, target: 1500},
-        {channel: 1, target: 1350},
+        {channel: 0, target: 1600},
+        {channel: 1, target: 1440},
+        {channel: 2, target: 1600},
       ]);
     })
     .then(() => {
-      return sleep(5000);
+      return sleep(3800);
     })
     .then(() => {
       // Open claw
