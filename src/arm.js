@@ -21,7 +21,8 @@ function sleep(duration) {
 
 module.exports = class ARM {
 
-  constructor() {
+  constructor(hostname) {
+    this.hostname = hostname;
     this.maestro = new Maestro();
     this.camera = new Raspistill({
       noFileSave: true,
@@ -66,8 +67,9 @@ module.exports = class ARM {
   positionToCapturePicture() {
     LOG.debug('Moving to capture picture');
     // Move above object, lower arm, rotate wrist and open claw
+    const target0 = (this.hostname === 'arm-1') ? 1220 : 1780;
     return this.maestro.setTargets([
-      {channel: 0, target: 1220},
+      {channel: 0, target: target0},
       {channel: 1, target: 1400},
       {channel: 2, target: 1330},
       {channel: 3, target: 1840},
@@ -107,8 +109,9 @@ module.exports = class ARM {
     })
     .then(() => {
       // Turns away from object and raise arm
+      const target0 = (this.hostname === 'arm-1') ? 1600 : 1400;
       return this.maestro.setTargets([
-        {channel: 0, target: 1600},
+        {channel: 0, target: target0},
         {channel: 1, target: 1440},
         {channel: 2, target: 1600},
       ]);
@@ -123,5 +126,29 @@ module.exports = class ARM {
     .then(() => {
       return sleep(1000);
     })
+  }
+
+  calibrateMin() {
+    LOG.debug('Calibrating min');
+    return this.maestro.setTargets([
+      {channel: 0, target: 1500},
+      {channel: 1, target: 1000},
+      {channel: 2, target: 1000},
+      {channel: 3, target: 1000},
+      {channel: 4, target: 1000},
+      {channel: 5, target: 1000},
+    ]);
+  }
+
+  calibrateMax() {
+    LOG.debug('Calibrating max');
+    return this.maestro.setTargets([
+      {channel: 0, target: 1500},
+      {channel: 1, target: 2000},
+      {channel: 2, target: 2000},
+      {channel: 3, target: 2000},
+      {channel: 4, target: 2000},
+      {channel: 5, target: 2000},
+    ]);
   }
 }

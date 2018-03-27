@@ -25,7 +25,7 @@ process.on('unhandledRejection', (reason, p) => {
 });
 
 const sfdc = new SalesforcePlatform(HOSTNAME);
-const arm = new ARM();
+const arm = new ARM(HOSTNAME);
 
 
 waitForInternetThenStartApp = () => {
