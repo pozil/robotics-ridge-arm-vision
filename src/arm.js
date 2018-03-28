@@ -184,31 +184,10 @@ module.exports = class ARM {
       return this.maestro.setTarget(5, 1700);
     })
     .then(() => {
-      return sleep(1000);
+      return sleep(2000);
     })
-  }
-
-  calibrateMin() {
-    LOG.debug('Calibrating min');
-    return this.maestro.setTargets([
-      {channel: 0, target: 1500},
-      {channel: 1, target: 1000},
-      {channel: 2, target: 1000},
-      {channel: 3, target: 1000},
-      {channel: 4, target: 1000},
-      {channel: 5, target: 1000},
-    ]);
-  }
-
-  calibrateMax() {
-    LOG.debug('Calibrating max');
-    return this.maestro.setTargets([
-      {channel: 0, target: 1500},
-      {channel: 1, target: 2000},
-      {channel: 2, target: 2000},
-      {channel: 3, target: 2000},
-      {channel: 4, target: 2000},
-      {channel: 5, target: 2000},
-    ]);
+    .then(() => {
+      return this.goHome();
+    })
   }
 }
