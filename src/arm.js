@@ -88,7 +88,7 @@ const SLEEPS = {
     'arm-2': 10200,
   },
   dropPayload: {
-    'arm-1': 4200,
+    'arm-1': 4400,
     'arm-2': 3500,
   }
 }
