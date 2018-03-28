@@ -8,6 +8,87 @@ Winston.loggers.add('ARM', {
 });
 const LOG = Winston.loggers.get('ARM');
 
+const TARGETS = {
+  home: {
+    'arm-1': [
+      {channel: 0, target: 1500},
+      {channel: 1, target: 1500},
+      {channel: 2, target: 1500},
+      {channel: 3, target: 1500},
+      {channel: 4, target: 1500},
+      {channel: 5, target: 1500},
+    ],
+    'arm-2': [
+      {channel: 0, target: 1500},
+      {channel: 1, target: 1600},
+      {channel: 2, target: 1500},
+      {channel: 3, target: 1300},
+      {channel: 4, target: 1500},
+      {channel: 5, target: 1500},
+    ],
+  },
+
+  positionToCapturePicture: { // Move above object, lower arm, rotate wrist and open claw
+    'arm-1': [
+      {channel: 0, target: 1220},
+      {channel: 1, target: 1400},
+      {channel: 2, target: 1330},
+      {channel: 3, target: 1840},
+      {channel: 4, target: 1430},
+      {channel: 5, target: 2000},
+    ],
+    'arm-2': [
+      {channel: 0, target: 1780},
+      {channel: 1, target: 1550},
+      {channel: 2, target: 1600},
+      {channel: 3, target: 1500},
+      {channel: 4, target: 1600},
+      {channel: 5, target: 2000},
+    ],
+  },
+
+  lowerArmToGrabPayload: { // Lower arm to grab payload
+    'arm-1': [
+      {channel: 1, target: 1050},
+      {channel: 2, target: 1500},
+    ],
+    'arm-2': [
+      {channel: 1, target: 1350},
+      {channel: 2, target: 1700},
+    ],
+  },
+
+  movePayload1: { // Turns away from object and raise arm
+    'arm-1': [
+      {channel: 1, target: 1500},
+    ],
+    'arm-2': [
+      {channel: 0, target: 1400},
+      {channel: 1, target: 1850},
+    ],
+  },
+
+  movePayload2: { // Turns away from object and raise arm
+    'arm-1': [
+      {channel: 0, target: 1600},
+      {channel: 1, target: 1440},
+      {channel: 2, target: 1600},
+    ],
+    'arm-2': [
+      {channel: 0, target: 1370},
+      {channel: 1, target: 1780},
+      {channel: 2, target: 1700},
+    ],
+  },
+}
+
+const SLEEPS = {
+  movePayload1: {
+    'arm-1': 6000,
+    'arm-2': 10200,
+  }
+}
+
 
 function sleep(duration) {
   return new Promise((resolve, reject) => {
@@ -56,26 +137,13 @@ module.exports = class ARM {
 
   goHome() {
     LOG.debug('Moving to home position');
-    const targets = [];
-    for (let i=0; i<6; i++) {
-      const channel = i;
-      targets.push({channel: channel, target: 1500});
-    }
-    return this.maestro.setTargets(targets);
+    return this.maestro.setTargets(TARGETS.home[this.hostname]);
   }
 
   positionToCapturePicture() {
     LOG.debug('Moving to capture picture');
     // Move above object, lower arm, rotate wrist and open claw
-    const target0 = (this.hostname === 'arm-1') ? 1220 : 1780;
-    return this.maestro.setTargets([
-      {channel: 0, target: target0},
-      {channel: 1, target: 1400},
-      {channel: 2, target: 1330},
-      {channel: 3, target: 1840},
-      {channel: 4, target: 1430},
-      {channel: 5, target: 2000},
-    ]);
+    return this.maestro.setTargets(TARGETS.positionToCapturePicture[this.hostname]);
   }
 
   capturePicture() {
@@ -86,10 +154,7 @@ module.exports = class ARM {
   grabAndTransferPayload() {
     LOG.debug('Grabing and tranfering payload');
     // Lower arm
-    return this.maestro.setTargets([
-      {channel: 1, target: 1050},
-      {channel: 2, target: 1500},
-    ])
+    return this.maestro.setTargets(TARGETS.lowerArmToGrabPayload[this.hostname])
     .then(() => {
       return sleep(6500);
     })
@@ -102,19 +167,14 @@ module.exports = class ARM {
     })
     .then(() => {
       // Start to raise arm
-      return this.maestro.setTarget(1, 1500);
+      return this.maestro.setTargets(TARGETS.movePayload1[this.hostname]);
     })
     .then(() => {
-      return sleep(6000);
+      return sleep(SLEEPS.movePayload1[this.hostname]);
     })
     .then(() => {
       // Turns away from object and raise arm
-      const target0 = (this.hostname === 'arm-1') ? 1600 : 1400;
-      return this.maestro.setTargets([
-        {channel: 0, target: target0},
-        {channel: 1, target: 1440},
-        {channel: 2, target: 1600},
-      ]);
+      return this.maestro.setTargets(TARGETS.movePayload2[this.hostname]);
     })
     .then(() => {
       return sleep(3800);

@@ -108,7 +108,8 @@ module.exports = class SalesforcePlatform {
         return LOG.error('Failed to find device with Hostname__c='+ this.hostname +' in Salesforce', error);
       }
       this.device = data.records[0];
-      LOG.debug('Found remote '+ this.hostname +' device', this.device.Id);
+      LOG.debug('Found remote '+ this.hostname +' device: '+ this.device.Id +' feed:', this.device.Feed__c);
+      process.env.feedId = this.device.Feed__c;
       // Push IP to Salesforce
       const apiRequestOptions = this.client.data.createDataRequest(this.session, 'sobjects/Device__c/'+ this.device.Id);
       apiRequestOptions.body = '{"Last_Known_IP__c": "'+ ip +'"}';

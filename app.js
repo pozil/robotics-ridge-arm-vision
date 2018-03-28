@@ -49,7 +49,12 @@ startApp = () => {
   });
 }
 
-onArmPickupRequested = () => {
+onArmPickupRequested = (event) => {
+  const eventData = event.data.payload;
+  if (eventData.Feed_Id__c !== process.env.feedId) {
+    return;
+  }
+
   arm.positionToCapturePicture()
   .then(() => {
     return arm.capturePicture();
@@ -62,7 +67,12 @@ onArmPickupRequested = () => {
   });
 }
 
-onArmPickupConfirmed = () => {
+onArmPickupConfirmed = (event) => {
+  const eventData = event.data.payload;
+  if (eventData.Feed_Id__c !== process.env.feedId) {
+    return;
+  }
+
   arm.grabAndTransferPayload()
   .then(() => {
     return sfdc.notifyPickupCompleted();
