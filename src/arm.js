@@ -86,6 +86,10 @@ const SLEEPS = {
   movePayload1: {
     'arm-1': 6000,
     'arm-2': 10200,
+  },
+  dropPayload: {
+    'arm-1': 4000,
+    'arm-2': 3500,
   }
 }
 
@@ -177,7 +181,7 @@ module.exports = class ARM {
       return this.maestro.setTargets(TARGETS.movePayload2[this.hostname]);
     })
     .then(() => {
-      return sleep(3800);
+      return sleep(SLEEPS.dropPayload[this.hostname]);
     })
     .then(() => {
       // Open claw
