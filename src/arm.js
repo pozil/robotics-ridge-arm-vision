@@ -88,7 +88,7 @@ const SLEEPS = {
     'arm-2': 10200,
   },
   dropPayload: {
-    'arm-1': 4000,
+    'arm-1': 4200,
     'arm-2': 3500,
   }
 }
@@ -112,8 +112,8 @@ module.exports = class ARM {
     this.camera = new Raspistill({
       noFileSave: true,
       verticalFlip: false,
-      width: 1296,
-      height: 972,
+      width: 800,
+      height: 600,
       time: 0
     });
   }
