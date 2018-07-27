@@ -155,10 +155,24 @@ module.exports = class ARM {
     return this.camera.takePhoto();
   }
 
-  grabAndTransferPayload() {
+  grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
     // Lower arm
-    return this.maestro.setTargets(TARGETS.lowerArmToGrabPayload[this.hostname])
+    const pickupTargets = TARGETS.lowerArmToGrabPayload[this.hostname];
+
+    if (this.hostname === 'arm-1') {
+      const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
+      probabilities.forEach(probability => {
+        const box = probability.boundingBox;
+        probability.center = {
+          x : box.maxX - box.minX,
+          y : box.maxY - box.minY,
+        };
+      });
+      console.log(probabilities);
+    }
+
+    return this.maestro.setTargets(pickupTargets)
     .then(() => {
       return sleep(6500);
     })

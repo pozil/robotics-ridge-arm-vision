@@ -73,7 +73,7 @@ onArmPickupConfirmed = (event) => {
     return;
   }
 
-  arm.grabAndTransferPayload()
+  arm.grabAndTransferPayload(eventData)
   .then(() => {
     return sfdc.notifyPickupCompleted();
   })
