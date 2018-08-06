@@ -1,8 +1,8 @@
 require('dotenv').config();
 const Winston = require('winston'),
   httpClient = require("request"),
-  ARM = require('./src/arm'),
-  SalesforcePlatform = require('./src/salesforce-platform'),
+  ARM = require('./arm'),
+  SalesforcePlatform = require('./salesforce-platform'),
   os = require('os');
 
 const HOSTNAME = process.env.hostname || os.hostname();
@@ -17,15 +17,39 @@ Winston.default.transports.console.level='debug';
 Winston.loggers.get('App').transports.console.level='debug';
 Winston.loggers.get('ARM').transports.console.level='debug';
 Winston.loggers.get('SFDC').transports.console.level='debug';
-
-
-process.on('warning', e => console.warn(e.stack));
-process.on('unhandledRejection', (reason, p) => {
-  LOG.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
-});
+Winston.loggers.get('COMETD').transports.console.level='info';
 
 const sfdc = new SalesforcePlatform(HOSTNAME);
 const arm = new ARM(HOSTNAME);
+
+let isShuttingDown = false;
+shutdown = () => {
+  if (isShuttingDown) {
+    return;
+  }
+  isShuttingDown = true;
+  console.log("\nGracefully shutting down from SIGINT (Ctrl-C) or SIGTERM");
+  Promise.all([
+    sfdc.disconnect(),
+    arm.disconnect()
+  ]).then(() => {
+    process.exit();
+  }).catch(e => {
+    LOG.error(e);
+    process.exit();
+  });
+}
+
+// Process hooks
+process.on('warning', e => console.warn(e.stack));
+process.on('unhandledRejection', (reason, p) => {
+    LOG.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
+});
+process.on('SIGINT', shutdown);
+process.on('SIGTERM', shutdown);
+
+const EVENT_ARM_PICKUP_REQUESTED = 'ARM_Pickup_Requested';
+const EVENT_ARM_PICKUP_CONFIRMED = 'ARM_Pickup_Confirmed';
 
 
 waitForInternetThenStartApp = () => {
@@ -40,21 +64,32 @@ waitForInternetThenStartApp = () => {
 }
 
 startApp = () => {
-  sfdc.init(onArmPickupRequested, onArmPickupConfirmed)
-  .then(() => {
-    return arm.init(true);
-  })
-  .catch((error) => {
+  return Promise.all([
+    sfdc.init(onPlatformEvent),
+    arm.init()
+  ]).catch((error) => {
     LOG.error(error);
   });
 }
 
-onArmPickupRequested = (event) => {
-  const eventData = event.data.payload;
+onPlatformEvent = platformEvent => {
+  // Ignore events from other feeds
+  const eventData = platformEvent.data.payload;
   if (eventData.Feed_Id__c !== process.env.feedId) {
     return;
   }
+  // Process event
+  switch (eventData.Event__c) {
+    case EVENT_ARM_PICKUP_REQUESTED:
+      onArmPickupRequested(eventData);
+    break;
+    case EVENT_ARM_PICKUP_CONFIRMED:
+      onArmPickupConfirmed(eventData);
+    break;
+  }
+}
 
+onArmPickupRequested = eventData => {
   arm.positionToCapturePicture()
   .then(() => {
     return arm.capturePicture();
@@ -67,12 +102,7 @@ onArmPickupRequested = (event) => {
   });
 }
 
-onArmPickupConfirmed = (event) => {
-  const eventData = event.data.payload;
-  if (eventData.Feed_Id__c !== process.env.feedId) {
-    return;
-  }
-
+onArmPickupConfirmed = (eventData) => {
   arm.grabAndTransferPayload(eventData)
   .then(() => {
     return sfdc.notifyPickupCompleted();

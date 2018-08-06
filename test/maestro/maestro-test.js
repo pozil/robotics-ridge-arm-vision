@@ -1,8 +1,8 @@
 const Winston = require('winston'),
   Sinon = require('sinon'),
   JsHamcrest = require('jshamcrest').JsHamcrest,
-  Protocol = require('../src/maestro-protocol-constants');
-  Maestro = require('../src/maestro'),
+  Protocol = require('../../src/maestro/maestro-protocol-constants');
+  Maestro = require('../../src/maestro/maestro'),
   SerialPort = require('serialport/test'),
   MockBinding = SerialPort.Binding;
 

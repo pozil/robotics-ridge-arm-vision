@@ -1,7 +1,8 @@
 const Winston = require('winston'),
   httpClient = require("request"),
   os = require('os'),
-  SalesforceClient = require('salesforce-node-client');
+  SalesforceClient = require('salesforce-node-client'),
+  CometdWrapper = require('./cometd-wrapper');
 
 // Configure logs
 Winston.loggers.add('SFDC', {
@@ -9,19 +10,10 @@ Winston.loggers.add('SFDC', {
 });
 const LOG = Winston.loggers.get('SFDC');
 
-
 // Topic paths for the Platform Events
-const TOPIC_ARM_PICKUP_REQUESTED = '/event/ARM_Pickup_Requested__e';
-const TOPIC_ARM_PICKUP_CONFIRMED = '/event/ARM_Pickup_Confirmed__e';
+const TOPIC_ROBOT_EVENT = '/event/Robot_Event__e';
 
-// Enable WebSockets for CometD
-var window = {};
-window.WebSocket = require('ws');
-// Configure CometD libraries (enables subscription to Platform Events)
-const cometdnodejs = require('cometd-nodejs-client').adapt();
-const cometdlib = require('cometd');
-const cometd = new cometdlib.CometD();
-
+const cometd = new CometdWrapper();
 
 module.exports = class SalesforcePlatform {
 
@@ -32,7 +24,7 @@ module.exports = class SalesforcePlatform {
     this.client = new SalesforceClient();
   }
 
-  init(onArmPickupRequested, onArmPickupConfirmed) {
+  init(onPlatformEvent) {
     return new Promise((resolve, reject) => {
       // Authenticate with Salesforce
       LOG.info('Authenticating with Salesforce...');
@@ -46,35 +38,30 @@ module.exports = class SalesforcePlatform {
         }
         LOG.info('Successfully authenticated with Salesforce.');
         this.session = payload;
-
         // Send device IP to Salesforce
         this.sendDeviceIpToSalesforce();
 
         // Configure the CometD object.
         cometd.configure({
-          url: this.session.instance_url + '/cometd/41.0/',
+          url: this.session.instance_url + '/cometd/'+ process.env.apiVersion.substring(1) +'/',
           requestHeaders: { Authorization: 'Bearer ' + this.session.access_token },
           appendMessageTypeToURL: false
         });
 
         // Handshake with the server and subscribe to the PE.
         LOG.debug('Connecting to CometD server...');
-        cometd.handshake((handshake) => {
-          if (handshake.successful) {
-            LOG.debug('Successfully connected to CometD server.');
-            // Subscribe to receive messages from the server.
-            cometd.subscribe(TOPIC_ARM_PICKUP_REQUESTED, onArmPickupRequested);
-            cometd.subscribe(TOPIC_ARM_PICKUP_CONFIRMED, onArmPickupConfirmed);
-            LOG.debug('Successfully subscribed to Platform Events');
+        cometd.connect().then(() => {
+          cometd.subscribe(TOPIC_ROBOT_EVENT, onPlatformEvent).then(() => {
             resolve();
-          } else {
-            const message = 'Unable to connect to CometD ' + JSON.stringify(handshake);
-            LOG.error(message);
-            reject(message);
-          }
+          });
         });
       });
     });
+  }
+
+  disconnect() {
+    LOG.debug('Disconnecting from CometD server...');
+    return cometd.disconnect();
   }
 
   /**

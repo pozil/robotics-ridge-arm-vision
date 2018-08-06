@@ -1,4 +1,4 @@
-const ByteUtils = require('../src/byte-utils'),
+const ByteUtils = require('../../src/maestro/byte-utils'),
 	JsHamcrest = require('jshamcrest').JsHamcrest;
 
 JsHamcrest.Integration.Nodeunit();

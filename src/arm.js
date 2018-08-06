@@ -1,5 +1,5 @@
 const Winston = require('winston'),
-  Maestro = require('./maestro'),
+  PwmDriver = require('adafruit-i2c-pwm-driver'),
   Raspistill = require('node-raspistill').Raspistill;
 
 // Configure logs
@@ -8,8 +8,9 @@ Winston.loggers.add('ARM', {
 });
 const LOG = Winston.loggers.get('ARM');
 
+
 const TARGETS = {
-  home: {
+  home: { // Move to home position
     'arm-1': [
       {channel: 0, target: 1500},
       {channel: 1, target: 1500},
@@ -108,7 +109,7 @@ module.exports = class ARM {
 
   constructor(hostname) {
     this.hostname = hostname;
-    this.maestro = new Maestro();
+    this.driver = PwmDriver({address: 0x40, device: '/dev/i2c-1', debug: true, i2cDebug: false});
     this.camera = new Raspistill({
       noFileSave: true,
       verticalFlip: false,
@@ -118,36 +119,34 @@ module.exports = class ARM {
     });
   }
 
-  init(shouldReturnToHome=true) {
-    LOG.debug('Connecting to Maestro');
-    if (shouldReturnToHome) {
-      return this.maestro.connect()
-      .then(() => {
-        return this.goHome();
-      })
-      .then(() => {
-        return sleep(6000);
-      });
-    }
-    else {
-      return this.maestro.connect();
-    }
+  init() {
+    LOG.debug('Connecting to ARM');
+    Promise.all([
+      this.driver.init(),
+      this.driver.setPWMFreq(50)
+    ])
+    .then(() => {
+      return this.goHome();
+    })
+    .then(() => {
+      return sleep(6000);
+    });
   }
 
   disconnect() {
     LOG.debug('Disconnecting');
-    return this.maestro.disconnect();
+    return this.driver.stop();
   }
 
   goHome() {
     LOG.debug('Moving to home position');
-    return this.maestro.setTargets(TARGETS.home[this.hostname]);
+    return this.setTargets(TARGETS.home[this.hostname]);
   }
 
   positionToCapturePicture() {
     LOG.debug('Moving to capture picture');
     // Move above object, lower arm, rotate wrist and open claw
-    return this.maestro.setTargets(TARGETS.positionToCapturePicture[this.hostname]);
+    return this.setTargets(TARGETS.positionToCapturePicture[this.hostname]);
   }
 
   capturePicture() {
@@ -157,9 +156,7 @@ module.exports = class ARM {
 
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
-    // Lower arm
-    const pickupTargets = TARGETS.lowerArmToGrabPayload[this.hostname];
-
+    // Get object position
     if (this.hostname === 'arm-1') {
       const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
       probabilities.forEach(probability => {
@@ -171,35 +168,36 @@ module.exports = class ARM {
       });
       console.log(probabilities);
     }
-
-    return this.maestro.setTargets(pickupTargets)
+    // Lower arm
+    const pickupTargets = TARGETS.lowerArmToGrabPayload[this.hostname];
+    return this.setTargets(pickupTargets)
     .then(() => {
       return sleep(6500);
     })
     .then(() => {
       // Close claw
-      return this.maestro.setTarget(5, 1150);
+      return this.setTarget(5, 1150);
     })
     .then(() => {
       return sleep(1000);
     })
     .then(() => {
       // Start to raise arm
-      return this.maestro.setTargets(TARGETS.movePayload1[this.hostname]);
+      return this.setTargets(TARGETS.movePayload1[this.hostname]);
     })
     .then(() => {
       return sleep(SLEEPS.movePayload1[this.hostname]);
     })
     .then(() => {
       // Turns away from object and raise arm
-      return this.maestro.setTargets(TARGETS.movePayload2[this.hostname]);
+      return this.setTargets(TARGETS.movePayload2[this.hostname]);
     })
     .then(() => {
       return sleep(SLEEPS.dropPayload[this.hostname]);
     })
     .then(() => {
       // Open claw
-      return this.maestro.setTarget(5, 1700);
+      return this.setTarget(5, 1700);
     })
     .then(() => {
       return sleep(2000);
@@ -207,5 +205,14 @@ module.exports = class ARM {
     .then(() => {
       return this.goHome();
     })
+  }
+
+  setTarget(channel, target) {
+    return this.driver.setPWM(channel, 0, target);
+  }
+
+  setTargets(targets) {
+    const promises = targets.map(target => (this.driver.setPWM(target.channel, 0, target.target)));
+    return Promise.all(promises);
   }
 }
