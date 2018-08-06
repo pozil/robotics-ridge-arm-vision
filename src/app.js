@@ -45,8 +45,8 @@ process.on('warning', e => console.warn(e.stack));
 process.on('unhandledRejection', (reason, p) => {
     LOG.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
 });
-process.on('SIGINT', shutdown);
-process.on('SIGTERM', shutdown);
+process.once('SIGINT', shutdown);
+process.once('SIGTERM', shutdown);
 
 const EVENT_ARM_PICKUP_REQUESTED = 'ARM_Pickup_Requested';
 const EVENT_ARM_PICKUP_CONFIRMED = 'ARM_Pickup_Confirmed';
