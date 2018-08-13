@@ -39,8 +39,8 @@ shutdown = () => {
     arm.disconnect()
   ]).then(() => {
     process.exit(0);
-  }).catch(e => {
-    LOG.error(e);
+  }).catch(error => {
+    LOG.error(error);
     process.exit(-1);
   });
 }
@@ -72,7 +72,7 @@ startApp = () => {
   return Promise.all([
     sfdc.init(onPlatformEvent),
     arm.init()
-  ]).catch((error) => {
+  ]).catch(error => {
     LOG.error(error);
   });
 }
@@ -99,10 +99,10 @@ onArmPickupRequested = eventData => {
   .then(() => {
     return arm.capturePicture();
   })
-  .then((picture) => {
+  .then(picture => {
     return sfdc.uploadPicture(picture)
   })
-  .catch((error) => {
+  .catch(error => {
     LOG.error(error);
   });
 }
@@ -112,7 +112,7 @@ onArmPickupConfirmed = (eventData) => {
   .then(() => {
     return sfdc.notifyPickupCompleted();
   })
-  .catch((error) => {
+  .catch(error => {
     LOG.error(error);
   });
 }
