@@ -1,4 +1,4 @@
-# TDX18 Robotics - ARM vision running on Raspberry Pi
+# Robotics Ridge - ARM vision running on Raspberry Pi
 
 ## Setup instructions
 Install with:<br/>
