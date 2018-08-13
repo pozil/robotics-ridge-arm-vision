@@ -157,20 +157,19 @@ module.exports = class ARM {
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
     // Get object position
-    if (this.hostname === 'arm-1') {
-      const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
-      probabilities.forEach(probability => {
-        const box = probability.boundingBox;
-        probability.center = {
-          x : box.maxX - box.minX,
-          y : box.maxY - box.minY,
-        };
-      });
-      console.log(probabilities);
-    }
+    const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
+    probabilities.forEach(probability => {
+      const box = probability.boundingBox;
+      probability.center = {
+        x : box.maxX - box.minX,
+        y : box.maxY - box.minY,
+      };
+    });
+    console.log(probabilities);
+    // TODO: do something with object position
+
     // Lower arm
-    const pickupTargets = TARGETS.lowerArmToGrabPayload[this.hostname];
-    return this.setTargets(pickupTargets)
+    return this.setTargets(TARGETS.lowerArmToGrabPayload[this.hostname])
     .then(() => {
       return sleep(6500);
     })
