@@ -6,6 +6,11 @@ const Winston = require('winston'),
   os = require('os');
 
 const HOSTNAME = process.env.hostname || os.hostname();
+if (HOSTNAME !== 'arm-1' && HOSTNAME !== 'arm-2') {
+  console.log('ERROR: invalid hostname: '+ HOSTNAME);
+  console.log('Hostname must be arm-1 or arm-2');
+  process.exit(-1);
+}
 
 // Configure logs
 Winston.loggers.add('App', {
@@ -33,10 +38,10 @@ shutdown = () => {
     sfdc.disconnect(),
     arm.disconnect()
   ]).then(() => {
-    process.exit();
+    process.exit(0);
   }).catch(e => {
     LOG.error(e);
-    process.exit();
+    process.exit(-1);
   });
 }
 
