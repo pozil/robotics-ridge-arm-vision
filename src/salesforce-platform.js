@@ -2,7 +2,7 @@ const Winston = require('winston'),
   httpClient = require("request"),
   os = require('os'),
   SalesforceClient = require('salesforce-node-client'),
-  CometdWrapper = require('./cometd-wrapper');
+  CometdClient = require('cometd-node-promise-client');
 
 // Configure logs
 Winston.loggers.add('SFDC', {
@@ -13,7 +13,12 @@ const LOG = Winston.loggers.get('SFDC');
 // Topic paths for the Platform Events
 const TOPIC_ROBOT_EVENT = '/event/Robot_Event__e';
 
-const cometd = new CometdWrapper();
+// Setup CometD
+Winston.loggers.add('COMETD', {
+  console: { level: 'info', colorize: true, label: 'COMETD' }
+});
+const cometd = new CometdClient(Winston.loggers.get('COMETD'));
+
 
 module.exports = class SalesforcePlatform {
 
