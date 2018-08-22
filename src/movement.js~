@@ -48,13 +48,13 @@ module.exports = class movement {
 			this.handleMoveSingle(sequence["setup"]);
 		}
 		if (sequence["move"]) {
-			this.handleMoveSingle(sequence["move"]);
+			this.doSingleMove(sequence["move"]);
 		}
 		if (sequence["action"]) {
-			this.handleMoveSingle(sequence["action"]);
+			this.doSingleMove(sequence["action"]);
 		}
 		if (sequence["exit"]) {
-			this.handleMoveSingle(sequence["exit"]);
+			this.doSingleMove(sequence["exit"]);
 		}
 	}
 
