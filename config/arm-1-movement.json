@@ -1,0 +1,27 @@
+{
+	home: {
+		setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+		move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+		action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+		exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+	},
+	picture: {
+                setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+        },
+	gantry: {
+                setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+        },
+	sleep : {
+                setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+                exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+        }
+}
+

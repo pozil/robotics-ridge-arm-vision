@@ -9,12 +9,14 @@
   },
   "main": "index.js",
   "dependencies": {
-    "adafruit-i2c-pwm-driver": "git://github.com/pozil/adafruit-i2c-pwm-driver.git",
+    "adafruit-i2c-pwm-driver": "^0.2.1",
     "cometd-node-promise-client": "^1.1.2",
     "dotenv": "^5.0.1",
+    "mocha": "^5.2.0",
     "node-raspistill": "0.0.14",
     "request": "^2.87.0",
     "salesforce-node-client": "^1.2.2",
+    "sleep": "^5.2.3",
     "winston": "^2.4.3"
   },
   "scripts": {
