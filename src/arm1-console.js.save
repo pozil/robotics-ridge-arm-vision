@@ -17,36 +17,29 @@ function getPosition(code) {
 		mover.goHome();
 	} else if (code === 'o') { //center low
 		//myRet = {dof0: 280, dof1: 248, dof2: 298, dof3: 365, dof4: 300, dof5: 300};
-		mover.goPickupCenter();
+		
 	} else if (code === 'l') { //center high
 		//myRet = {dof0: 280, dof1: 305, dof2: 270, dof3: 385, dof4: 300, dof5: 300};
 		mover.goPicture();
 	} else if (code === 'z') { //center top low
 		//myRet = {dof0: 280, dof1: 241, dof2: 318, dof3: 375, dof4: 300, dof5: 300};
-		mover.goPickupOne();
 	} else if (code === 'x') { //center left low
                 //myRet = {dof0: 274, dof1: 248, dof2: 298, dof3: 365, dof4: 300, dof5: 300};
-		mover.goPickupTwo();
 	} else if (code === 'v') { //center right low
                 //myRet = {dof0: 287, dof1: 248, dof2: 298, dof3: 365, dof4: 300, dof5: 300};
-		mover.goPickupThree();
 	} else if (code === 'b') { //center bottom low
                 //myRet = {dof0: 280, dof1: 251, dof2: 278, dof3: 345, dof4: 300, dof5: 300};
-		mover.goPickupFour();
 	} else if (code === 'n') { //salute forward up
 		mover.goSalute();
 	} else if (code === 'k') { //sleep
 		mover.goSleep();
         } else if (code === 'u') { //linear robot drop off
-		mover.goDropOff();
+		mover.goDropoff();
 	} else { //default center high
 	}
 	return myRet;
 }
 
-var mydof = {};
-var currDof = "";
-var isDirty = true;
 
 //driver.setPWM(flags.dof,0,flags.pwm);
 process.stdin.on('keypress', (str, key) => {
@@ -75,8 +68,6 @@ process.stdin.on('keypress', (str, key) => {
 	key.name === 'b' || key.name === 'o' || key.name === 'l' || 
 	key.name === 'p' || key.name === 'n' || key.name === 'k' ||
 	key.name === 'u' )) {
-    	getPosition(key.name);
-	mydof = mover.currentPosition;
   } else if (key.name === 'a') {
     mydof[currDof]-=10;
 	isDirty = true;
@@ -103,12 +94,10 @@ process.stdin.on('keypress', (str, key) => {
     console.log(key);
     console.log();
   }
-  //console.log(currDof);
-  //console.log(mydof[currDof]);
+  console.log(currDof);
+  console.log(mydof[currDof]);
 
   if (isDirty) {
-	  //updateArm(mydof);
-	mover.handleMoveSingle(mydof);
-	isDirty = false;
+	  updateArm(mydof);
   }
 });

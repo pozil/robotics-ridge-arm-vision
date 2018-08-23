@@ -13,7 +13,8 @@ module.exports = class movement {
   
 	constructor(hostname) {
 		this.hostname = hostname;
-		this.driver = PwmDriver({address: 0x40, device: '/dev/i2c-1', debug: true, i2cDebug: false});
+		this.driver = PwmDriver({address: 0x40, device: '/dev/i2c-1', debug: false, i2cDebug: false});
+		this.driver.setPWMFreq(50);
 		//test environment only?
 		if (hostname.startsWith('test')) {
 			hostname = "../test/" + hostname
@@ -29,8 +30,31 @@ module.exports = class movement {
 
 	}
 
+	goPickupCenter() {
+		this.handleMove(this.positions["pickupCenter"]);
+	}
+
+	goPickupOne() {
+		this.handleMove(this.positions["pickupOne"]);
+
+	}
+
+	goPickupTwo() {
+		this.handleMove(this.positions["pickupTwo"]);
+	}
+
+	goPickupThree() {
+		this.handleMove(this.positions["pickupThree"]);
+	}
+
+	goPickupFour() {
+		this.handleMove(this.positions["pickupFour"]);
+	}
+
 	goHome() {
+		console.log("home");
 		this.handleMove(this.positions["home"]);		
+
 	}
 
 	goSalute() {
@@ -42,6 +66,7 @@ module.exports = class movement {
 	}
 
 	goPicture() {
+		console.log("picture");
 		this.handleMove(this.positions["picture"]);
 	}
 
@@ -50,6 +75,8 @@ module.exports = class movement {
 	}
 
 	handleMove(sequence) {
+		console.log("move");
+		console.log(sequence);
 		if (sequence["setup"]) {
 			this.handleMoveSingle(sequence["setup"]);
 		}
@@ -65,16 +92,22 @@ module.exports = class movement {
 	}
 
 	handleMoveSingle(coordinates) {
-		for (var curr = 0; curr++; curr <= 5) {
+		console.log("single move");
+		console.log(coordinates);
+		for (var curr = 0; curr < 6; curr++) {
+			console.log("in loop");
 			if (coordinates["dof"+curr]) {
-				driver.setPWM(curr,0,coordinates["dof"+curr]);
+				this.driver.setPWM(curr,0,coordinates["dof"+curr]);
+				console.log("set dof" + curr);
 				this.currentPosition["dof"+curr] = coordinates["dof"+curr];
+			} else {
+				console.log("no coordinated" + curr);
 			}
 		}
 		if (coordinates["msleep"]) {
 			Sleep.msleep(coordinates["msleep"]);
 		}
+		this.currentPosition = coordinates;
 	}
 
-	
 }
