@@ -1,32 +1,33 @@
 {
         "home": {
-		"setup": {"dof1":275, "msleep": 500}, 
-                "move": {"dof0": 345, "dof1": 300, "dof2": 300, "dof3": 350, "dof4": 300, "dof5": 200, "msleep": 3000 }
+		"setup": {"dof1":350, "msleep": 500}, 
+                "move": {"dof0": 300, "dof1": 400, "dof2": 300, "dof3": 350, "dof4": 300, "dof5": 200, "msleep": 3000 }
         },
 	"salute": {
 		"setup": {"dof1": 350, "dof2": 300, "msleep": 1500},
-		"move": {"dof0": 335, "dof1": 360, "dof2": 390, "dof3": 340, "dof4": 310, "dof5": 200, "msleep": 4000},
-		"action": {"dof5": 400, "msleep": 1000},
-		"exit": {"dof5": 400}
+		"move": {"dof0": 335, "dof1": 430, "dof2": 410, "dof3": 240, "dof4": 350, "dof5": 200, "msleep": 4000},
+		"action": {"dof5": 520, "msleep": 1000},
+		"exit": {"dof5": 200}
 	},
 	"sleep": {
-		"move": {"dof0": 315, "dof1": 195, "dof2": 220, "dof3": 390, "dof4": 310, "dof5": 190, "msleep": 9000}
+		"setup": { "dof1":365, "msleep": 2000 },
+		"move": {"dof0": 335, "dof1": 260, "dof2": 230, "dof3": 300, "dof4": 340, "dof5": 190, "msleep": 9000}
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 400, "dof1": 340, "dof2": 300, "dof3": 290, "dof4": 310, "dof5": 190, "msleep": 10000},
+		"move": {"dof0": 265, "dof1": 365, "dof2": 378, "dof3": 265, "dof4": 340, "dof5": 300, "msleep": 10000},
 		"action": {"dof5": 460, "msleep": 2000},
 		"exit" : {"dof1": 370, "dof5": 350, "msleep": 1000}
 	},
 	"picture": {
 		"setup": {"dof1": 350, "dof2": 350, "msleep": 2500},
-                "move": {"dof0": 280, "dof1": 305, "dof2": 270, "dof3": 385, "dof4": 300, "dof5": 300, "msleep": 2000}
+                "move": {"dof0": 385, "dof1": 345, "dof2": 278, "dof3": 265, "dof4": 340, "dof5": 300, "msleep": 2000}
         },
 	"pickupCenter": {
 		"setup": {"dof1":300, "msleep": 2000}, 
-		"move": {"dof0": 280, "dof1": 248, "dof2": 298, "dof3": 365, "dof4": 300, "dof5": 420, "msleep": 8000},
+		"move": {"dof0": 385, "dof1": 305, "dof2": 303, "dof3": 245, "dof4": 340, "dof5": 420, "msleep": 8000},
 		"action": {"dof5": 250, "msleep": 1000},
-		"exit": {"dof1": 300, "msleep": 1000}
+		"exit": {"dof1": 350, "msleep": 1000}
 	},
 	"pickupOne": {
 		"move": {"dof0": 280, "dof1": 241, "dof2": 318, "dof3": 375, "dof4": 300, "dof5": 420}

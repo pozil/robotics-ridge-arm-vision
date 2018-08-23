@@ -95,19 +95,16 @@ module.exports = class movement {
 		console.log("single move");
 		console.log(coordinates);
 		for (var curr = 0; curr < 6; curr++) {
-			console.log("in loop");
 			if (coordinates["dof"+curr]) {
 				this.driver.setPWM(curr,0,coordinates["dof"+curr]);
-				console.log("set dof" + curr);
 				this.currentPosition["dof"+curr] = coordinates["dof"+curr];
 			} else {
-				console.log("no coordinated" + curr);
+				//console.log("no coordinated" + curr);
 			}
 		}
 		if (coordinates["msleep"]) {
 			Sleep.msleep(coordinates["msleep"]);
 		}
-		this.currentPosition = coordinates;
 	}
 
 }

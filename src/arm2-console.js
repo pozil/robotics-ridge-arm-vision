@@ -45,12 +45,28 @@ function getPosition(code) {
 	return myRet;
 }
 
+function updateDof(targetDof, current, change) {
+	var ret = 0;
+
+	if (!current) {
+		current = mover.currentPosition[targetDof];
+	}
+	ret = current + change;
+	return ret;
+}
+
 var mydof = {};
 var currDof = "";
 var isDirty = true;
 
 //driver.setPWM(flags.dof,0,flags.pwm);
 process.stdin.on('keypress', (str, key) => {
+  //reset the mydof if we're just picking one
+	if (key.ctrl) {
+		mydof = {};
+	}
+
+  //figure out which keys were pressed
   if (key.ctrl && key.name === 'c') {
     process.exit();
   } else if (key.ctrl && key.name === 'q') {
@@ -79,22 +95,22 @@ process.stdin.on('keypress', (str, key) => {
     	getPosition(key.name);
 	mydof = mover.currentPosition;
   } else if (key.name === 'a') {
-    mydof[currDof]-=10;
+        mydof[currDof] = updateDof(currDof, mydof[currDof],-10);	
 	isDirty = true;
   } else if (key.name === 's') {
-    mydof[currDof]-=5;
+	mydof[currDof] = updateDof(currDof, mydof[currDof],-5);
 	isDirty = true;
   } else if (key.name === 'd') {
-    mydof[currDof]-=1;
+	mydof[currDof] = updateDof(currDof, mydof[currDof],-1);
 	isDirty = true;
   } else if (key.name === 'f') {
-    mydof[currDof]+=1;
+	mydof[currDof] = updateDof(currDof, mydof[currDof],1);
 	isDirty = true;
   } else if (key.name === 'g') {
-    mydof[currDof]+=5;
+	mydof[currDof] = updateDof(currDof, mydof[currDof],5);
 	isDirty = true;
   } else if (key.name === 'h') {
-    mydof[currDof]+=10;
+	mydof[currDof] = updateDof(currDof, mydof[currDof],10);
 	isDirty = true;
   } else if (key.shift && key.name === 'z') {
 	console.log(mydof);
