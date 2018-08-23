@@ -2,6 +2,7 @@ require('dotenv').config();
 const Winston = require('winston'),
   httpClient = require("request"),
   ARM = require('./arm'),
+  movement = require('./movement');
   SalesforcePlatform = require('./salesforce-platform'),
   os = require('os');
 
@@ -26,6 +27,7 @@ Winston.loggers.get('COMETD').transports.console.level='info';
 
 const sfdc = new SalesforcePlatform(HOSTNAME);
 const arm = new ARM(HOSTNAME);
+const mover = new movement(hostname);
 
 let isShuttingDown = false;
 shutdown = () => {
@@ -36,7 +38,8 @@ shutdown = () => {
   console.log("\nGracefully shutting down from SIGINT (Ctrl-C) or SIGTERM");
   Promise.all([
     sfdc.disconnect(),
-    arm.disconnect()
+    arm.disconnect(),
+    mover.disconnect()
   ]).then(() => {
     process.exit(0);
   }).catch(error => {
@@ -71,7 +74,8 @@ waitForInternetThenStartApp = () => {
 startApp = () => {
   return Promise.all([
     sfdc.init(onPlatformEvent),
-    arm.init()
+    arm.init(),
+    mover.init()
   ]).catch(error => {
     LOG.error(error);
   });

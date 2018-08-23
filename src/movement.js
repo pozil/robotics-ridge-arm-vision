@@ -17,10 +17,12 @@ module.exports = class movement {
 		//test environment only?
 		if (hostname.startsWith('test')) {
 			hostname = "../test/" + hostname
+		} else {
+			hostname = "../config/" + hostname
 		}
 		this.configFile = hostname + '-movement.json';
 		this.positions = require(this.configFile);
-		this.currentPosition = this.positions.home.setup;
+		this.currentPosition = {};
 	}
 
 	init() {
@@ -28,19 +30,23 @@ module.exports = class movement {
 	}
 
 	goHome() {
-		
+		this.handleMove(this.positions["home"]);		
+	}
+
+	goSalute() {
+		this.handleMove(this.positions["salute"]);
 	}
 
 	goSleep() {
-
+		this.handleMove(this.positions["sleep"]);
 	}
 
 	goPicture() {
-
+		this.handleMove(this.positions["picture"]);
 	}
 
-	goGantry() {
-	
+	goDropOff() {
+		this.handleMove(this.positions["dropoff"]);
 	}
 
 	handleMove(sequence) {

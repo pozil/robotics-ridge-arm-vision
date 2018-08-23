@@ -1,27 +1,18 @@
 {
-	home: {
-		setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-		move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-		action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-		exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+        "home": {
+                "move": {"dof0": 300, "dof1": 300, "dof2": 300, "dof3": 300, "dof4": 300, "dof5": 300, "msleep": 500 }
+        },
+	"salute": {
+		"move": {"dof0": 335, "dof1": 360, "dof2": 390, "dof3": 340, "dof4": 310, "dof5": 430}
 	},
-	picture: {
-                setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-        },
-	gantry: {
-                setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-        },
-	sleep : {
-                setup: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                move: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                action: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
-                exit: {dof0: 100, dof1: 100, dof2: 100, dof3: 100, dof4: 100, dof5 : 100, msleep : 1000 },
+	"sleep": {
+		"move": {"dof0": 315, "dof1": 195, "dof2": 220, "dof3": 390, "dof4": 310, "dof5": 190}
+	},
+	"dropoff": {
+		"move": {"dof0": 400, "dof1": 330, "dof2": 300, "dof3": 290, "dof4": 310, "dof5": 190}
+	},
+	"picture": {
+                "move": {"dof0": 280, "dof1": 305, "dof2": 270, "dof3": 385, "dof4": 300, "dof5": 300}
         }
 }
 
