@@ -75,6 +75,7 @@ module.exports = class ARM {
 
     probabilities.forEach(probability => {
       if (probability.label.toLowerCase() == mytarget) {
+
         if (probability.center.x >= 90 && probability.center.x <= 99 && 
           probability.center.y >= 95 && probability.center.y < 105) {
           ret = this.mover.goPickupFour();
@@ -84,12 +85,12 @@ module.exports = class ARM {
         } else if (probability.center.x >= 110 && probability.center.x <= 120 && 
           probability.center.y >= 105 && probability.center.y < 115) {
             ret = this.mover.goPickupTwo();
-          } else if (probability.center.x >= 100 && probability.center.x <= 110 && 
-            probability.center.y >= 120 && probability.center.y < 130) {
-            ret = this.mover.goPickupOne();
+        } else if (probability.center.x >= 100 && probability.center.x <= 110 && 
+          probability.center.y >= 120 && probability.center.y < 130) {
+          ret = this.mover.goPickupOne();
+        }
       }
-    }
-    );    
+    });   
     
     console.log(probabilities);
     return ret;
