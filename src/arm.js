@@ -58,7 +58,7 @@ module.exports = class ARM {
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
     // Get object position
-    /*
+    
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
     probabilities.forEach(probability => {
       const box = probability.boundingBox;
@@ -68,7 +68,7 @@ module.exports = class ARM {
       };
     });
     console.log(probabilities);
-    */
+    
     // TODO: do something with object position
 
     return this.mover.goDropOff();
