@@ -17,7 +17,7 @@
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
 		"move": {"dof0": 265, "dof1": 365, "dof2": 378, "dof3": 265, "dof4": 340, "msleep": 8500},
 		"action": {"dof5": 460, "msleep": 2000},
-		"exit" : {"dof1": 370, "dof5": 350, "msleep": 1000}
+		"exit" : {"dof0": 300, "dof5": 350, "msleep": 1000}
 	},
 	"picture": {
 		"setup": {"dof1": 350, "dof2": 350, "msleep": 2500},
