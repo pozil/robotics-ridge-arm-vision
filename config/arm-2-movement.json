@@ -1,7 +1,7 @@
 {
         "home": {
 		"setup": {"dof1":350, "msleep": 500}, 
-                "move": {"dof0": 300, "dof1": 400, "dof2": 300, "dof3": 350, "dof4": 300, "dof5": 200, "msleep": 3000 }
+                "move": {"dof0": 330, "dof1": 400, "dof2": 300, "dof3": 350, "dof4": 300, "dof5": 200, "msleep": 3000 }
         },
 	"salute": {
 		"setup": {"dof1": 350, "dof2": 300, "msleep": 1500},
@@ -15,7 +15,7 @@
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 265, "dof1": 365, "dof2": 378, "dof3": 265, "dof4": 340, "dof5": 300, "msleep": 10000},
+		"move": {"dof0": 265, "dof1": 365, "dof2": 378, "dof3": 265, "dof4": 340, "msleep": 8500},
 		"action": {"dof5": 460, "msleep": 2000},
 		"exit" : {"dof1": 370, "dof5": 350, "msleep": 1000}
 	},
@@ -25,8 +25,8 @@
         },
 	"pickupCenter": {
 		"setup": {"dof1":300, "msleep": 2000}, 
-		"move": {"dof0": 385, "dof1": 305, "dof2": 303, "dof3": 245, "dof4": 340, "dof5": 420, "msleep": 8000},
-		"action": {"dof5": 250, "msleep": 1000},
+		"move": {"dof0": 385, "dof1": 305, "dof2": 303, "dof3": 245, "dof4": 340, "dof5": 420, "msleep": 7000},
+		"action": {"dof5": 220, "msleep": 1000},
 		"exit": {"dof1": 350, "msleep": 1000}
 	},
 	"pickupOne": {
@@ -43,4 +43,3 @@
 		"action": {"dof5": 250, "msleep": 1000}
         }
 }
-
