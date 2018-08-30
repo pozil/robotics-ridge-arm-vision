@@ -55,11 +55,8 @@ module.exports = class ARM {
     return this.camera.takePhoto();
   }
 
-  grabAndTransferPayload(eventData) {
-    LOG.debug('Grabbing and tranfering payload');
-    // Get object position
-    
-    const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
+  getPickupPoint(probabilities) {
+
     probabilities.forEach(probability => {
       const box = probability.boundingBox;
       probability.center = {
@@ -67,10 +64,26 @@ module.exports = class ARM {
         y : box.maxY - box.minY,
       };
     });
+    
     console.log(probabilities);
+        
+    if (probabilities.center.x > 120 && probabilities.center.y > 120) {
+      return this.mover.goPickupOne();
+    } else {
+      return this.mover.goPickupCenter();
+    }
+  }
+
+  grabAndTransferPayload(eventData) {
+    LOG.debug('Grabbing and tranfering payload');
+    // Get object position
+    
+    const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
+
+    let myPickupPoint = this.getPickupPoint(probabilities);
     
     // TODO: do something with object position
-    return Promise.all([this.mover.goPickupCenter(), this.mover.goDropOff(), this.mover.goHome() ]);
+    return Promise.all([myPickupPoint, this.mover.goDropOff(), this.mover.goHome() ]);
 
     return this.mover.goDropOff();
   }
