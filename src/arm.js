@@ -76,23 +76,31 @@ module.exports = class ARM {
     probabilities.forEach(probability => {
       if (probability.label.toLowerCase() == mytarget) {
 
-        if (probability.center.x >= 90 && probability.center.x <= 99 && 
-          probability.center.y >= 95 && probability.center.y < 105) {
+        if (probability.center.x >= 90 && probability.center.x <= 115 && 
+          probability.center.y >= 95 && probability.center.y < 115) {
           ret = this.mover.goPickupFour();
+		console.log('position 4');
         } else if (probability.center.x >= 120 && probability.center.x <= 130 && 
           probability.center.y >= 110 && probability.center.y < 120) {
             ret = this.mover.goPickupThree();
+		console.log('position 3');
         } else if (probability.center.x >= 110 && probability.center.x <= 120 && 
           probability.center.y >= 105 && probability.center.y < 115) {
             ret = this.mover.goPickupTwo();
-        } else if (probability.center.x >= 100 && probability.center.x <= 110 && 
-          probability.center.y >= 120 && probability.center.y < 130) {
+		console.log('position 2');
+        } else if (probability.center.x >= 100 && probability.center.x <= 125 && 
+          probability.center.y >= 110 && probability.center.y < 130) {
           ret = this.mover.goPickupOne();
+		console.log('position 1');
         }
       }
     });   
     
     console.log(probabilities);
+
+	if (!ret) {
+		console.log('position NOT FOUND');
+	}
     return ret;
   }
 
