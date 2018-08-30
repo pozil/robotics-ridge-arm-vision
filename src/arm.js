@@ -59,9 +59,9 @@ module.exports = class ARM {
     return this.camera.takePhoto();
   }
 
-  getPickupPoint(probabilities) {
+  getPickupPoint(mytarget, probabilities) {
 
-    console.log('looking for ' + this.currentPicture);
+    console.log('looking for ' + mytarget);
 
     probabilities.forEach(probability => {
       const box = probability.boundingBox;
@@ -83,7 +83,7 @@ module.exports = class ARM {
     
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
 
-    let myPickupPoint = this.getPickupPoint(probabilities);
+    let myPickupPoint = this.getPickupPoint(this.currentTarget, probabilities);
     
     // TODO: do something with object position
     return Promise.all([myPickupPoint, this.mover.goDropOff(), this.mover.goHome() ]);
