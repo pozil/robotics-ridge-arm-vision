@@ -56,7 +56,7 @@ module.exports = class ARM {
   }
 
   grabAndTransferPayload(eventData) {
-    LOG.debug('Grabing and tranfering payload');
+    LOG.debug('Grabbing and tranfering payload');
     // Get object position
     
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
@@ -70,6 +70,7 @@ module.exports = class ARM {
     console.log(probabilities);
     
     // TODO: do something with object position
+    return Promise.all([this.mover.goPickupCenter(), this.mover.goDropOff(), this.mover.goHome() ]);
 
     return this.mover.goDropOff();
   }

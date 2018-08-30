@@ -122,20 +122,18 @@ module.exports = class SalesforcePlatform {
       const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'Device/'+ this.device.Id);
       apiRequestOptions.headers['Content-Type'] = 'image/jpeg';
       apiRequestOptions.body = picture;
-	console.log('in upload picture');
       httpClient.post(apiRequestOptions, (error, response, body) => {
-	console.log(response);
-	console.log(response.statusCode);
-        if (response && 
+	      if (response && 
 		(response.statusCode < 200 || response.statusCode > 299)) {
           LOG.error('Failed to upload ARM image (HTTP '+ response.statusCode +')', body);
           reject(response.statusCode);
         } else if (error) {
           LOG.error('Failed to upload ARM image', error);
           reject(error);
+        } else {
+          LOG.info('Successfully uploaded ARM image')
+          resolve();
         }
-        LOG.info('Successfully uploaded ARM image')
-        resolve();
       });
     });
   }
