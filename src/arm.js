@@ -25,7 +25,7 @@ module.exports = class ARM {
   init() {
     LOG.debug('Connecting to ARM');
     Promise.all([
-      this.driver.init(),
+      //this.driver.init(),
     ])
     .then(() => {
       return this.goHome();

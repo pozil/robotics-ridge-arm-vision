@@ -36,8 +36,7 @@ shutdown = () => {
   console.log("\nGracefully shutting down from SIGINT (Ctrl-C) or SIGTERM");
   Promise.all([
     sfdc.disconnect(),
-    arm.disconnect(),
-    mover.disconnect()
+    arm.disconnect()
   ]).then(() => {
     process.exit(0);
   }).catch(error => {
@@ -72,8 +71,7 @@ waitForInternetThenStartApp = () => {
 startApp = () => {
   return Promise.all([
     sfdc.init(onPlatformEvent),
-    arm.init(),
-    mover.init()
+    arm.init()
   ]).catch(error => {
     LOG.error(error);
   });
