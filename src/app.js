@@ -95,9 +95,11 @@ onPlatformEvent = platformEvent => {
 }
 
 onArmPickupRequested = eventData => {
+  console.log(eventData.Payload__c);
   arm.positionToCapturePicture()
   .then(() => {
-    return arm.capturePicture();
+	console.log('payload: ' + eventData.Payload__c);
+    return arm.capturePicture(eventData.Payload__c);
   })
   .then(picture => {
     return sfdc.uploadPicture(picture)

@@ -20,6 +20,7 @@ module.exports = class ARM {
       height: 600,
       time: 0
     });
+    this.currentTarget = '';
   }
 
   init() {
@@ -43,8 +44,11 @@ module.exports = class ARM {
     return this.mover.goHome();
   }
 
-  positionToCapturePicture() {
+  positionToCapturePicture(targetObject) {
     LOG.debug('Moving to capture picture');
+	this.currentTarget = targetObject;
+	console.log('this  is ' + this.currentTarget);
+	console.log('original is ' + targetObject);
     // Move above object, lower arm, rotate wrist and open claw
     //return this.setTargets(TARGETS.positionToCapturePicture[this.hostname]);
     return this.mover.goPicture();
@@ -57,6 +61,8 @@ module.exports = class ARM {
 
   getPickupPoint(probabilities) {
 
+    console.log('looking for ' + this.currentPicture);
+
     probabilities.forEach(probability => {
       const box = probability.boundingBox;
       probability.center = {
@@ -66,17 +72,14 @@ module.exports = class ARM {
     });
     
     console.log(probabilities);
-        
-    if (probabilities.center.x > 120 && probabilities.center.y > 120) {
-      return this.mover.goPickupOne();
-    } else {
-      return this.mover.goPickupCenter();
-    }
+
   }
 
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabbing and tranfering payload');
     // Get object position
+
+	console.log('find: ' + eventData.Payload__c);
     
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
 

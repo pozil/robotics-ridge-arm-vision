@@ -84,7 +84,7 @@ process.stdin.on('keypress', (str, key) => {
 	key.name === 'b' || key.name === 'o' || key.name === 'l' || 
 	key.name === 'p' || key.name === 'n' || key.name === 'k' ||
 	key.name === 'u' )) {
-    	Promise.all(getPosition(key.name));
+    	Promise.all(getPosition(key.name)).catch(function(error){if (error) { console.log(error); }});
 			mydof = mover.currentPosition;
   } else if (key.name === 'a') {
         mydof[currDof] = updateDof(currDof, mydof[currDof],-10);	
