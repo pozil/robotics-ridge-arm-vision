@@ -108,6 +108,7 @@ onArmPickupRequested = eventData => {
 }
 
 onArmPickupConfirmed = (eventData) => {
+  LOG.debug("have confirmed ARM pickup");
   arm.grabAndTransferPayload(eventData)
   .then(() => {
     return sfdc.notifyPickupCompleted();
