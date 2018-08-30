@@ -61,6 +61,8 @@ module.exports = class ARM {
 
   getPickupPoint(mytarget, probabilities) {
 
+    let ret = null;
+
     console.log('looking for ' + mytarget);
 
     probabilities.forEach(probability => {
@@ -70,9 +72,27 @@ module.exports = class ARM {
         y : box.maxY - box.minY,
       };
     });
+
+    probabilities.forEach(probability => {
+      if (probability.label.toLowerCase() == mytarget) {
+        if (probability.center.x >= 90 && probability.center.x <= 99 && 
+          probability.center.y >= 95 && probability.center.y < 105) {
+          ret = this.mover.goPickupFour();
+        } else if (probability.center.x >= 120 && probability.center.x <= 130 && 
+          probability.center.y >= 110 && probability.center.y < 120) {
+            ret = this.mover.goPickupThree();
+        } else if (probability.center.x >= 110 && probability.center.x <= 120 && 
+          probability.center.y >= 105 && probability.center.y < 115) {
+            ret = this.mover.goPickupTwo();
+          } else if (probability.center.x >= 100 && probability.center.x <= 110 && 
+            probability.center.y >= 120 && probability.center.y < 130) {
+            ret = this.mover.goPickupOne();
+      }
+    }
+    );    
     
     console.log(probabilities);
-
+    return ret;
   }
 
   grabAndTransferPayload(eventData) {
