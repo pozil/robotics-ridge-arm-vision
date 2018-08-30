@@ -30,6 +30,17 @@ module.exports = class movement {
 
 	}
 
+	disconnect() {
+		return new Promise(function(resolve, reject) {
+			//something
+			if (true) {
+				resolve();
+			} else {
+				reject();
+			}
+		});
+	}
+
 	goPickupCenter() {
 		let that = this;
 		return that.handleMove(this.positions["pickupCenter"]);

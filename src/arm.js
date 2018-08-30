@@ -12,7 +12,7 @@ module.exports = class ARM {
 
   constructor(hostname) {
     this.hostname = hostname;
-    this.mover = new Movement(hostname);
+    this.mover = new Movement(this.hostname);
     this.camera = new Raspistill({
       noFileSave: true,
       verticalFlip: false,
