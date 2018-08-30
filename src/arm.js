@@ -79,7 +79,7 @@ module.exports = class ARM {
     LOG.debug('Grabbing and tranfering payload');
     // Get object position
 
-	console.log('find: ' + eventData.Payload__c);
+	console.log('find: ' + this.currentTarget);
     
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
 
