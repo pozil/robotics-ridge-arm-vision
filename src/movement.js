@@ -31,73 +31,94 @@ module.exports = class movement {
 	}
 
 	goPickupCenter() {
-		this.handleMove(this.positions["pickupCenter"]);
+		let that = this;
+		return that.handleMove(this.positions["pickupCenter"]);
 	}
 
 	goPickupOne() {
-		this.handleMove(this.positions["pickupOne"]);
+		let that = this;
+		return that.handleMove(this.positions["pickupOne"]);
 
 	}
 
 	goPickupTwo() {
-		this.handleMove(this.positions["pickupTwo"]);
+		let that = this;
+		return that.handleMove(this.positions["pickupTwo"]);
 	}
 
 	goPickupThree() {
-		this.handleMove(this.positions["pickupThree"]);
+		let that = this;
+		return that.handleMove(this.positions["pickupThree"]);
 	}
 
 	goPickupFour() {
-		this.handleMove(this.positions["pickupFour"]);
+		let that = this;
+		return that.handleMove(this.positions["pickupFour"]);
 	}
 
 	goHome() {
 		console.log("home");
-		this.handleMove(this.positions["home"]);		
+		let that = this;
+		return that.handleMove(this.positions["home"]);		
 
 	}
 
 	goSalute() {
-		this.handleMove(this.positions["salute"]);
+		let that = this;
+		return that.handleMove(this.positions["salute"]);
 	}
 
 	goSleep() {
-		this.handleMove(this.positions["sleep"]);
+		let that = this;
+		return that.handleMove(this.positions["sleep"]);
 	}
 
 	goPicture() {
 		console.log("picture");
-		this.handleMove(this.positions["picture"]);
+		let that = this;
+		return that.handleMove(this.positions["picture"]);
 	}
 
 	goDropOff() {
-		this.handleMove(this.positions["dropoff"]);
+		let that = this;
+		return that.handleMove(this.positions["dropoff"]);
 	}
 
 	handleMove(sequence) {
 		console.log("move");
 		console.log(sequence);
-		if (sequence["setup"]) {
-			this.handleMoveSingle(sequence["setup"]);
-		}
-		if (sequence["move"]) {
-			this.handleMoveSingle(sequence["move"]);
-		}
-		if (sequence["action"]) {
-			this.handleMoveSingle(sequence["action"]);
-		}
-		if (sequence["exit"]) {
-			this.handleMoveSingle(sequence["exit"]);
-		}
+		let that = this;
+		return new Promise(function(resolve,reject) {
+			if (sequence["setup"]) {
+				that.handleMoveSingle(sequence["setup"]);
+			}
+			if (sequence["move"]) {
+				that.handleMoveSingle(sequence["move"]);
+			}
+			if (sequence["action"]) {
+				that.handleMoveSingle(sequence["action"]);
+			}
+			if (sequence["exit"]) {
+				that.handleMoveSingle(sequence["exit"]);
+			}
+			if (true) {
+				resolve();
+			} else {
+				reject(new Error("How'd I get here?"));
+			}
+
+		});
+
 	}
 
 	handleMoveSingle(coordinates) {
 		console.log("single move");
 		console.log(coordinates);
+		let that = this;
 		for (var curr = 0; curr < 6; curr++) {
 			if (coordinates["dof"+curr]) {
-				this.driver.setPWM(curr,0,coordinates["dof"+curr]);
-				this.currentPosition["dof"+curr] = coordinates["dof"+curr];
+				that.driver.setPWM(curr,0,coordinates["dof"+curr]);
+				that.currentPosition["dof"+curr] = coordinates["dof"+curr];
 			} else {
 				//console.log("no coordinated" + curr);
 			}
