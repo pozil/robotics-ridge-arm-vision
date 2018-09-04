@@ -109,6 +109,12 @@ module.exports = class movement {
 			if (sequence["action"]) {
 				that.handleMoveSingle(sequence["action"]);
 			}
+			if (sequence["action2"]) {
+				that.handleMoveSingle(sequence["action2"]);
+			}
+			if (sequence["action3"]) {
+				that.handleMoveSingle(sequence["action3"]);
+			}
 			if (sequence["exit"]) {
 				that.handleMoveSingle(sequence["exit"]);
 			}
