@@ -51,7 +51,7 @@
         },
         "pickupFour": {
                 "setup": {"dof1":300, "msleep": 2000}, 
-                "move": {"dof0": 385, "dof1": 300, "dof2": 315, "dof3": 245, "dof4": 340, "dof5": 420, "msleep": 7000},
+                "move": {"dof0": 385, "dof1": 300, "dof2": 330, "dof3": 290, "dof4": 340, "dof5": 420, "msleep": 7000},
                 "action": {"dof5": 220, "msleep": 1000},
                 "exit": {"dof1": 350, "msleep": 1000}
         }
