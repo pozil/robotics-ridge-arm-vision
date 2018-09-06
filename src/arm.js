@@ -77,20 +77,20 @@ module.exports = class ARM {
     probabilities.forEach(probability => {
       if (probability.label.toLowerCase() == mytarget) {
 
-        if (probability.center.x >= 350 && probability.center.x <= 400 && 
-          probability.center.y >= 465 && probability.center.y <= 515) {
+        if (probability.center.x >= 360 && probability.center.x <= 430 && 
+          probability.center.y >= 455 && probability.center.y <= 525) {
           ret = this.mover.goPickupOne();
 		console.log('position 1');
-        } else if (probability.center.x >= 485 && probability.center.x <= 535 && 
-          probability.center.y >= 255 && probability.center.y <= 305) {
+        } else if (probability.center.x >= 465 && probability.center.x <= 555 && 
+          probability.center.y >= 235 && probability.center.y <= 335) {
             ret = this.mover.goPickupTwo();
 		console.log('position 2');
-        } else if (probability.center.x >= 165 && probability.center.x <= 215 && 
-          probability.center.y >= 225 && probability.center.y < 275) {
+        } else if (probability.center.x >= 145 && probability.center.x <= 235 && 
+          probability.center.y >= 205 && probability.center.y < 295) {
             ret = this.mover.goPickupThree();
 		console.log('position 3');
-        } else if (probability.center.x >= 375 && probability.center.x <= 425 && 
-          probability.center.y >= 105 && probability.center.y < 155) {
+        } else if (probability.center.x >= 355 && probability.center.x <= 445 && 
+          probability.center.y >= 85 && probability.center.y < 175) {
           ret = this.mover.goPickupFour();
 		console.log('position 4');
         }
