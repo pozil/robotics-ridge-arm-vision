@@ -56,7 +56,7 @@
                 "exit": {"dof1": 350, "msleep": 1000}
         },
 	"zones": {
-		"one": {"xmin":360,"xmax":430,"ymin":455,"ymax":525},
+		"one": {"xmin":360,"xmax":430,"ymin":350,"ymax":525},
                 "two": {"xmin":465,"xmax":625,"ymin":235,"ymax":335},
                 "three": {"xmin":125,"xmax":285,"ymin":205,"ymax":295},
                 "four": {"xmin":355,"xmax":500,"ymin":50,"ymax":175}

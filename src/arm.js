@@ -88,9 +88,11 @@ module.exports = class ARM {
     });
 
 	console.log(probabilities);
-
+	 let isFound = false;
     probabilities.forEach(probability => {
-      if (probability.label.toLowerCase() == mytarget) {
+      if (probability.label.toLowerCase() == mytarget && !isFound) {
+
+	isFound = true;
 
         if (this.isInTheZone("one", probability.center.x, probability.center.y)) {
         	ret = this.mover.goPickupOne();

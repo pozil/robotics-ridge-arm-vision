@@ -1,7 +1,7 @@
 {
         "home": {
 		"setup": {"dof1":275, "msleep": 500}, 
-                "move": {"dof0": 345, "dof1": 300, "dof2": 300, "dof3": 350, "dof4": 300, "dof5": 200, "msleep": 3000 }
+                "move": {"dof0": 345, "dof1": 335, "dof2": 285, "dof3": 440, "dof4": 300, "dof5": 200, "msleep": 3000 }
         },
 	"salute": {
 		"setup": {"dof1": 350, "dof2": 300, "msleep": 1500},
@@ -14,38 +14,47 @@
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 400, "dof1": 340, "dof2": 300, "dof3": 290, "dof4": 310, "dof5": 190, "msleep": 10000},
-		"action": {"dof5": 460, "msleep": 2000},
+		"move": {"dof0": 400, "dof1": 305, "dof2": 370, "dof3": 340, "dof4": 310, "msleep": 10000},
+		"action2": {"dof5": 460, "msleep": 2000},
+		"action": {"dof3": 360, "msleep": 1000},
+		"action3": {"dof3": 340, "msleep": 1000},
 		"exit" : {"dof1": 370, "dof5": 350, "msleep": 1000}
 	},
 	"picture": {
 		"setup": {"dof1": 350, "dof2": 350, "msleep": 2500},
-                "move": {"dof0": 280, "dof1": 305, "dof2": 270, "dof3": 385, "dof4": 300, "dof5": 300, "msleep": 2000}
+                "move": {"dof0": 277, "dof1": 335, "dof2": 255, "dof3": 395, "dof4": 300, "dof5": 300, "msleep": 2000}
         },
 	"pickupCenter": {
 		"setup": {"dof1":300, "msleep": 2000}, 
-		"move": {"dof0": 280, "dof1": 248, "dof2": 298, "dof3": 365, "dof4": 300, "dof5": 420, "msleep": 8000},
-		"action": {"dof5": 250, "msleep": 1000},
+		"move": {"dof0": 280, "dof1": 248, "dof2": 298, "dof3": 365, "dof4": 300, "dof5": 500, "msleep": 8000},
+		"action": {"dof5": 230, "msleep": 1000},
 		"exit": {"dof1": 300, "msleep": 1000}
 	},
 	"pickupOne": {
-		"move": {"dof0": 280, "dof1": 241, "dof2": 318, "dof3": 375, "dof4": 300, "dof5": 420}
+		"move": {"dof0": 275, "dof1": 245, "dof2": 272, "dof3": 365, "dof4": 300, "dof5": 500, "msleep": 9000},
+		"action": {"dof5": 230, "msleep": 2000},
+		"exit": {"dof1": 265, "msleep": 1000}
 	},
         "pickupTwo": {
-                "move": {"dof0": 274, "dof1": 248, "dof2": 298, "dof3": 365, "dof4": 300, "dof5": 420}
+                "move": {"dof0": 285, "dof1": 245, "dof2": 290, "dof3": 350, "dof4": 300, "dof5": 500, "msleep": 9000},
+		"action": {"dof5": 230, "msleep": 2000},
+		"exit": {"dof1": 265, "msleeP": 1000}
         },
         "pickupThree": {
-                "move": {"dof0": 287, "dof1": 248, "dof2": 298, "dof3": 365, "dof4": 300, "dof5": 420}
+                "move": {"dof0": 268, "dof1": 245, "dof2": 298, "dof3": 350, "dof4": 300, "dof5": 500, "msleep": 8000},
+		"action": {"dof5": 230, "msleep": 1000},
+		"exit": {"dof1": 265, "msleep": 1000}
         },
         "pickupFour": {
-                "move": {"dof0": 280, "dof1": 245, "dof2": 278, "dof3": 330, "dof4": 310, "dof5": 420, "msleep": 8000},
-		"action": {"dof5": 250, "msleep": 1000}
+                "move": {"dof0": 280, "dof1": 240, "dof2": 305, "dof3": 330, "dof4": 310, "dof5": 500, "msleep": 8000},
+		"action": {"dof5": 250, "msleep": 1000},
+		"exit": {"dof1": 265, "msleep": 1000}
         },
         "zones": {
-                "one": {"xmin":360,"xmax":430,"ymin":455,"ymax":525},
+                "one": {"xmin":320,"xmax":430,"ymin":350,"ymax":535},
                 "two": {"xmin":465,"xmax":555,"ymin":235,"ymax":335},
-                "three": {"xmin":145,"xmax":235,"ymin":205,"ymax":295},
-                "four": {"xmin":355,"xmax":445,"ymin":85,"ymax":175}
+                "three": {"xmin":100,"xmax":235,"ymin":205,"ymax":295},
+                "four": {"xmin":325,"xmax":445,"ymin":75,"ymax":175}
         }
 
 

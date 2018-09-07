@@ -6,42 +6,45 @@ const PwmDriver = require('adafruit-i2c-pwm-driver'),
 readline.emitKeypressEvents(process.stdin);
 process.stdin.setRawMode(true);
 
+//determines which config file it uses.
 const mover = new movement('arm-1');
 
 function getPosition(code) {
-	var myRet = {}
 	if (false) {
 		//do nothing
 	} else if (code === 'p') { //nuetral
-		//myRet = {dof0: 300, dof1: 300, dof2: 300, dof3: 300, dof4: 300, dof5: 300};
-		mover.goHome();
+		return mover.goHome();
 	} else if (code === 'o') { //center low
-		//myRet = {dof0: 280, dof1: 248, dof2: 298, dof3: 365, dof4: 300, dof5: 300};
-		mover.goPickupCenter();
+		return mover.goPickupCenter();
 	} else if (code === 'l') { //center high
-		//myRet = {dof0: 280, dof1: 305, dof2: 270, dof3: 385, dof4: 300, dof5: 300};
-		mover.goPicture();
+		return mover.goPicture();
 	} else if (code === 'z') { //center top low
-		//myRet = {dof0: 280, dof1: 241, dof2: 318, dof3: 375, dof4: 300, dof5: 300};
-		mover.goPickupOne();
+		return mover.goPickupOne();
 	} else if (code === 'x') { //center left low
-                //myRet = {dof0: 274, dof1: 248, dof2: 298, dof3: 365, dof4: 300, dof5: 300};
-		mover.goPickupTwo();
+		return mover.goPickupTwo();
 	} else if (code === 'v') { //center right low
-                //myRet = {dof0: 287, dof1: 248, dof2: 298, dof3: 365, dof4: 300, dof5: 300};
-		mover.goPickupThree();
+		return mover.goPickupThree();
 	} else if (code === 'b') { //center bottom low
-                //myRet = {dof0: 280, dof1: 251, dof2: 278, dof3: 345, dof4: 300, dof5: 300};
-		mover.goPickupFour();
+		return mover.goPickupFour();
 	} else if (code === 'n') { //salute forward up
-		mover.goSalute();
+		return mover.goSalute();
 	} else if (code === 'k') { //sleep
-		mover.goSleep();
+		return mover.goSleep();
         } else if (code === 'u') { //linear robot drop off
-		mover.goDropOff();
+		return mover.goDropOff();
 	} else { //default center high
 	}
-	return myRet;
+	return false;
+}
+
+function updateDof(targetDof, current, change) {
+	var ret = 0;
+
+	if (!current) {
+		current = mover.currentPosition[targetDof];
+	}
+	ret = current + change;
+	return ret;
 }
 
 var mydof = {};
@@ -50,6 +53,12 @@ var isDirty = true;
 
 //driver.setPWM(flags.dof,0,flags.pwm);
 process.stdin.on('keypress', (str, key) => {
+  //reset the mydof if we're just picking one
+	if (key.ctrl) {
+		mydof = {};
+	}
+
+  //figure out which keys were pressed
   if (key.ctrl && key.name === 'c') {
     process.exit();
   } else if (key.ctrl && key.name === 'q') {
@@ -75,26 +84,26 @@ process.stdin.on('keypress', (str, key) => {
 	key.name === 'b' || key.name === 'o' || key.name === 'l' || 
 	key.name === 'p' || key.name === 'n' || key.name === 'k' ||
 	key.name === 'u' )) {
-    	getPosition(key.name);
-	mydof = mover.currentPosition;
+    	Promise.all(getPosition(key.name)).catch(function(error){if (error) { console.log(error); }});
+			mydof = mover.currentPosition;
   } else if (key.name === 'a') {
-    mydof[currDof]-=10;
-	isDirty = true;
+        mydof[currDof] = updateDof(currDof, mydof[currDof],-10);	
+				isDirty = true;
   } else if (key.name === 's') {
-    mydof[currDof]-=5;
-	isDirty = true;
+				mydof[currDof] = updateDof(currDof, mydof[currDof],-5);
+				isDirty = true;
   } else if (key.name === 'd') {
-    mydof[currDof]-=1;
-	isDirty = true;
+				mydof[currDof] = updateDof(currDof, mydof[currDof],-1);
+				isDirty = true;
   } else if (key.name === 'f') {
-    mydof[currDof]+=1;
-	isDirty = true;
+				mydof[currDof] = updateDof(currDof, mydof[currDof],1);
+				isDirty = true;
   } else if (key.name === 'g') {
-    mydof[currDof]+=5;
-	isDirty = true;
+				mydof[currDof] = updateDof(currDof, mydof[currDof],5);
+				isDirty = true;
   } else if (key.name === 'h') {
-    mydof[currDof]+=10;
-	isDirty = true;
+				mydof[currDof] = updateDof(currDof, mydof[currDof],10);
+				isDirty = true;
   } else if (key.shift && key.name === 'z') {
 	console.log(mydof);
   } else {
@@ -108,7 +117,7 @@ process.stdin.on('keypress', (str, key) => {
 
   if (isDirty) {
 	  //updateArm(mydof);
-	mover.handleMoveSingle(mydof);
-	isDirty = false;
+		mover.handleMoveSingle(mydof);
+		isDirty = false;
   }
 });
