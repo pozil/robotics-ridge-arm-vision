@@ -14,11 +14,11 @@
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 400, "dof1": 305, "dof2": 370, "dof3": 340, "dof4": 310, "msleep": 10000},
+		"move": {"dof0": 396, "dof1": 305, "dof2": 360, "dof3": 340, "dof4": 310, "msleep": 10000},
 		"action2": {"dof5": 460, "msleep": 2000},
-		"action": {"dof3": 360, "msleep": 1000},
+		"action": {"dof3": 370, "msleep": 1000},
 		"action3": {"dof3": 340, "msleep": 1000},
-		"exit" : {"dof1": 370, "dof5": 350, "msleep": 1000}
+		"exit" : {"dof0": 375, "dof5": 350, "msleep": 1000}
 	},
 	"picture": {
 		"setup": {"dof1": 350, "dof2": 350, "msleep": 2500},
@@ -52,7 +52,7 @@
         },
         "zones": {
                 "one": {"xmin":320,"xmax":430,"ymin":350,"ymax":535},
-                "two": {"xmin":465,"xmax":555,"ymin":235,"ymax":335},
+                "two": {"xmin":465,"xmax":555,"ymin":235,"ymax":360},
                 "three": {"xmin":100,"xmax":235,"ymin":205,"ymax":295},
                 "four": {"xmin":325,"xmax":445,"ymin":75,"ymax":175}
         }
