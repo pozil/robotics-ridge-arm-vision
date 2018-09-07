@@ -58,6 +58,21 @@ module.exports = class ARM {
     return this.camera.takePhoto();
   }
 
+  isInTheZone(zoneName, xValue, yValue) {
+
+	let ret = false;
+
+	if (this.mover.positions.zones[zoneName].xmin <= xValue &&
+		this.mover.positions.zones[zoneName].xmax >= xValue &&
+		this.mover.positions.zones[zoneName].ymin <= yValue &&
+		this.mover.positions.zones[zoneName].ymax >= yValue) {
+
+		ret = true;
+	}
+
+	return ret;
+  }
+
   getPickupPoint(mytarget, probabilities) {
 
     let ret = null;
@@ -77,21 +92,17 @@ module.exports = class ARM {
     probabilities.forEach(probability => {
       if (probability.label.toLowerCase() == mytarget) {
 
-        if (probability.center.x >= 360 && probability.center.x <= 430 && 
-          probability.center.y >= 455 && probability.center.y <= 525) {
-          ret = this.mover.goPickupOne();
+        if (this.isInTheZone("one", probability.center.x, probability.center.y)) {
+        	ret = this.mover.goPickupOne();
 		console.log('position 1');
-        } else if (probability.center.x >= 465 && probability.center.x <= 555 && 
-          probability.center.y >= 235 && probability.center.y <= 335) {
-            ret = this.mover.goPickupTwo();
+        } else if (this.isInTheZone("two", probability.center.x, probability.center.y)) {
+            	ret = this.mover.goPickupTwo();
 		console.log('position 2');
-        } else if (probability.center.x >= 145 && probability.center.x <= 235 && 
-          probability.center.y >= 205 && probability.center.y < 295) {
-            ret = this.mover.goPickupThree();
+        } else if (this.isInTheZone("three", probability.center.x, probability.center.y)) {
+            	ret = this.mover.goPickupThree();
 		console.log('position 3');
-        } else if (probability.center.x >= 355 && probability.center.x <= 445 && 
-          probability.center.y >= 85 && probability.center.y < 175) {
-          ret = this.mover.goPickupFour();
+        } else if (this.isInTheZone("four", probability.center.x, probability.center.y)) {
+          	ret = this.mover.goPickupFour();
 		console.log('position 4');
         }
       }

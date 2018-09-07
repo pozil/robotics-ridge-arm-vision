@@ -54,5 +54,11 @@
                 "move": {"dof0": 385, "dof1": 300, "dof2": 330, "dof3": 290, "dof4": 340, "dof5": 420, "msleep": 7000},
                 "action": {"dof5": 220, "msleep": 1000},
                 "exit": {"dof1": 350, "msleep": 1000}
-        }
+        },
+	"zones": {
+		"one": {"xmin":360,"xmax":430,"ymin":455,"ymax":525},
+                "two": {"xmin":465,"xmax":625,"ymin":235,"ymax":335},
+                "three": {"xmin":125,"xmax":285,"ymin":205,"ymax":295},
+                "four": {"xmin":355,"xmax":500,"ymin":50,"ymax":175}
+	}
 }

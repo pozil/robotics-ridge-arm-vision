@@ -40,6 +40,14 @@
         "pickupFour": {
                 "move": {"dof0": 280, "dof1": 245, "dof2": 278, "dof3": 330, "dof4": 310, "dof5": 420, "msleep": 8000},
 		"action": {"dof5": 250, "msleep": 1000}
+        },
+        "zones": {
+                "one": {"xmin":360,"xmax":430,"ymin":455,"ymax":525},
+                "two": {"xmin":465,"xmax":555,"ymin":235,"ymax":335},
+                "three": {"xmin":145,"xmax":235,"ymin":205,"ymax":295},
+                "four": {"xmin":355,"xmax":445,"ymin":85,"ymax":175}
         }
+
+
 }
 
