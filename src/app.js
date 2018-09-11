@@ -97,7 +97,7 @@ onPlatformEvent = platformEvent => {
   }
 }
 
-onDanceRequested() {
+onDanceRequested = () => {
 	Promise.all(arm.doDance());
 }
 
