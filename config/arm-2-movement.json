@@ -15,7 +15,7 @@
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 270, "dof1": 365, "dof2": 378, "dof3": 265, "dof4": 340, "msleep": 8500},
+		"move": {"dof0": 267, "dof1": 375, "dof2": 373, "dof3": 265, "dof4": 340, "msleep": 8500},
 		"action2": {"dof5": 460, "msleep": 2000},
 		"action": {"dof1": 360, "dof3": 315, "msleep": 1000},
 		"action3": {"dof1":365, "dof3": 265, "msleep": 1000},
@@ -35,30 +35,30 @@
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 385, "dof1": 305, "dof2": 285, "dof3": 245, "dof4": 340, "dof5": 420, "msleep": 7000},
                 "action": {"dof5": 220, "msleep": 1000},
-                "exit": {"dof1": 350, "msleep": 1000}
+                "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
 	},
         "pickupTwo": {
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 390, "dof1": 305, "dof2": 302, "dof3": 250, "dof4": 340, "dof5": 420, "msleep": 7000},
                 "action": {"dof5": 220, "msleep": 1000},
-                "exit": {"dof1": 350, "msleep": 1000}
+                "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
         },
         "pickupThree": {
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 375, "dof1": 305, "dof2": 308, "dof3": 250, "dof4": 340, "dof5": 420, "msleep": 7000},
                 "action": {"dof5": 220, "msleep": 1000},
-                "exit": {"dof1": 350, "msleep": 1000}
+                "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
         },
         "pickupFour": {
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 385, "dof1": 300, "dof2": 330, "dof3": 290, "dof4": 340, "dof5": 420, "msleep": 7000},
                 "action": {"dof5": 220, "msleep": 1000},
-                "exit": {"dof1": 350, "msleep": 1000}
+                "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
         },
 	"zones": {
 		"one": {"xmin":360,"xmax":430,"ymin":350,"ymax":525},
-                "two": {"xmin":465,"xmax":625,"ymin":235,"ymax":335},
-                "three": {"xmin":125,"xmax":285,"ymin":205,"ymax":295},
+                "two": {"xmin":465,"xmax":625,"ymin":205,"ymax":335},
+                "three": {"xmin":125,"xmax":285,"ymin":190,"ymax":295},
                 "four": {"xmin":355,"xmax":500,"ymin":50,"ymax":175}
 	}
 }
