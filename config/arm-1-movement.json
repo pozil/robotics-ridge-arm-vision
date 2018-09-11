@@ -9,14 +9,21 @@
 		"action": {"dof5": 400, "msleep": 1000},
 		"exit": {"dof5": 400}
 	},
+	"dance": {
+                "setup": {"dof1": 350, "dof2": 300, "msleep": 1500},
+                "move": {"dof0": 335, "dof1": 360, "dof2": 390, "dof3": 340, "dof4": 310, "dof5": 200, "msleep": 4000},
+                "action": {"dof0": 315, "dof5": 400, "msleep": 1000},
+		"action2": {"dof0": 355, "msleep": 1000},
+		"action3": {"dof0": 335, "msleep": 1000}
+	},
 	"sleep": {
 		"move": {"dof0": 315, "dof1": 195, "dof2": 220, "dof3": 390, "dof4": 310, "dof5": 190, "msleep": 9000}
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 396, "dof1": 305, "dof2": 360, "dof3": 340, "dof4": 310, "msleep": 10000},
+		"move": {"dof0": 396, "dof1": 325, "dof2": 350, "dof3": 340, "dof4": 310, "msleep": 10000},
 		"action2": {"dof5": 460, "msleep": 2000},
-		"action": {"dof3": 370, "msleep": 1000},
+		"action": {"dof1": 315, "dof3": 370, "msleep": 1000},
 		"action3": {"dof3": 340, "msleep": 1000},
 		"exit" : {"dof0": 375, "dof5": 350, "msleep": 1000}
 	},

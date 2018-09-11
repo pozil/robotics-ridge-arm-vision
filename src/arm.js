@@ -39,8 +39,11 @@ module.exports = class ARM {
 
   goHome() {
     LOG.debug('Moving to home position');
-    //return this.setTargets(TARGETS.home[this.hostname]);
     return this.mover.goHome();
+  }
+
+  doDance() {
+	return this.mover.goDance();
   }
 
   positionToCapturePicture(targetObject) {

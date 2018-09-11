@@ -55,7 +55,7 @@ process.once('SIGTERM', shutdown);
 
 const EVENT_ARM_PICKUP_REQUESTED = 'ARM_Pickup_Requested';
 const EVENT_ARM_PICKUP_CONFIRMED = 'ARM_Pickup_Confirmed';
-
+const EVENT_DANCE_REQUESTED = 'Dance Dance Fourth Industrial Revolution';
 
 waitForInternetThenStartApp = () => {
   httpClient.get({url: 'https://status.salesforce.com/status', timeout: 5000}, (error, response, body) => {
@@ -80,6 +80,9 @@ startApp = () => {
 onPlatformEvent = platformEvent => {
   // Ignore events from other feeds
   const eventData = platformEvent.data.payload;
+  if (eventData.Event__c == EVENT_DANCE_REQUESTED) {
+	onDanceRequested();
+  }
   if (eventData.Feed_Id__c !== process.env.feedId) {
     return;
   }
@@ -92,6 +95,10 @@ onPlatformEvent = platformEvent => {
       onArmPickupConfirmed(eventData);
     break;
   }
+}
+
+onDanceRequested() {
+	Promise.all(arm.doDance());
 }
 
 onArmPickupRequested = eventData => {
