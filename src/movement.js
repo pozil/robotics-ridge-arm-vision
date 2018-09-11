@@ -41,6 +41,11 @@ module.exports = class movement {
 		});
 	}
 
+	goDance() {
+		let that = this;
+		return that.handleMove(this.positions["dance"]);
+	}
+
 	goPickupCenter() {
 		let that = this;
 		return that.handleMove(this.positions["pickupCenter"]);

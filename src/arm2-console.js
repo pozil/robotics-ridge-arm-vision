@@ -12,6 +12,8 @@ const mover = new movement('arm-2');
 function getPosition(code) {
 	if (false) {
 		//do nothing
+	} else if (code === 'a') {
+		return mover.goDance();
 	} else if (code === 'p') { //nuetral
 		return mover.goHome();
 	} else if (code === 'o') { //center low
@@ -80,13 +82,14 @@ process.stdin.on('keypress', (str, key) => {
     currDof = 'dof5';
     console.log('updated ', currDof);
   } else if (key.ctrl && (
+	key.name === 'a' ||
 	key.name === 'z' || key.name === 'x' || key.name === 'v' || 
 	key.name === 'b' || key.name === 'o' || key.name === 'l' || 
 	key.name === 'p' || key.name === 'n' || key.name === 'k' ||
 	key.name === 'u' )) {
     	Promise.all(getPosition(key.name)).catch(function(error){if (error) { console.log(error); }});
 			mydof = mover.currentPosition;
-  } else if (key.name === 'a') {
+  } else if (!key.ctrl && key.name === 'a') {
         mydof[currDof] = updateDof(currDof, mydof[currDof],-10);	
 				isDirty = true;
   } else if (key.name === 's') {
