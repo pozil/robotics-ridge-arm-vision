@@ -58,12 +58,10 @@
 		"exit": {"dof1": 335, "dof2": 255, "msleep": 1000}
         },
         "zones": {
-                "one": {"xmin":320,"xmax":430,"ymin":350,"ymax":535},
+                "one": {"xmin":320,"xmax":430,"ymin":350,"ymax":560},
                 "two": {"xmin":465,"xmax":555,"ymin":235,"ymax":360},
                 "three": {"xmin":100,"xmax":235,"ymin":205,"ymax":295},
-                "four": {"xmin":325,"xmax":445,"ymin":75,"ymax":175}
+                "four": {"xmin":325,"xmax":445,"ymin":75,"ymax":200}
         }
-
-
 }
 

@@ -63,12 +63,16 @@ module.exports = class ARM {
 
   isInTheZone(zoneName, xValue, yValue) {
 
+	let that = this;
 	let ret = false;
 
-	if (this.mover.positions.zones[zoneName].xmin <= xValue &&
-		this.mover.positions.zones[zoneName].xmax >= xValue &&
-		this.mover.positions.zones[zoneName].ymin <= yValue &&
-		this.mover.positions.zones[zoneName].ymax >= yValue) {
+	console.log("zone: " + zoneName + ", x = " + xValue + ", y = " + yValue);
+	console.log("boundaries: " + that.mover.positions.zones[zoneName]);
+
+	if (that.mover.positions.zones[zoneName].xmin <= xValue &&
+		that.mover.positions.zones[zoneName].xmax >= xValue &&
+		that.mover.positions.zones[zoneName].ymin <= yValue &&
+		that.mover.positions.zones[zoneName].ymax >= yValue) {
 
 		ret = true;
 	}
