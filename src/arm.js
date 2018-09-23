@@ -17,7 +17,7 @@ module.exports = class ARM {
       verticalFlip: false,
 	width: 800,
 	height: 600,
-      time: 0
+	time: 100
     });
     this.currentTarget = '';
   }
