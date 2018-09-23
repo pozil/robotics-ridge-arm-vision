@@ -1,10 +1,10 @@
 {
         "home": {
 		"setup": {"dof1":350, "msleep": 500}, 
-                "move": {"dof0": 330, "dof1": 400, "dof2": 300, "dof3": 350, "dof4": 300, "dof5": 200, "msleep": 3000 }
+                "move": {"dof0": 330, "dof1": 400, "dof2": 300, "dof3": 350, "dof4": 250, "dof5": 200, "msleep": 3000 }
         },
 	"salute": {
-		"setup": {"dof1": 350, "dof2": 300, "msleep": 1500},
+		"A-setup": {"dof1": 350, "dof2": 300, "msleep": 1500},
 		"move": {"dof0": 335, "dof1": 430, "dof2": 410, "dof3": 240, "dof4": 350, "dof5": 200, "msleep": 4000},
 		"action": {"dof5": 520, "msleep": 1000},
 		"exit": {"dof5": 200}
@@ -22,51 +22,51 @@
 		"exit": {"dof0": 335, "msleep": 1000}
 	},
 	"dropoff": {
-		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 267, "dof1": 380, "dof2": 373, "dof3": 265, "dof4": 340, "msleep": 8500},
+		"setup" : {"dof1": 400, "dof2": 350, "msleep": 3500}, 
+		"move": {"dof0": 267, "dof1": 405, "dof2": 330, "dof3": 265, "dof4": 340, "msleep": 8500},
 		"action2": {"dof5": 460, "msleep": 2000},
-		"action": {"dof1": 370, "dof3": 315, "msleep": 1000},
-		"action3": {"dof1":375, "dof3": 265, "msleep": 1000},
-		"exit" : {"dof0": 300, "dof1": 365, "dof5": 350, "msleep": 1000}
+		"action": {"dof2": 325, "dof3": 305, "msleep": 1000},
+		"action3": {"dof1":390, "dof2": 350, "dof3": 265, "msleep": 1000},
+		"exit" : {"dof0": 300, "dof1": 400, "dof5": 350, "msleep": 1000}
 	},
 	"picture": {
 		"setup": {"dof1": 350, "dof2": 350, "msleep": 2500},
-                "move": {"dof0": 385, "dof1": 395, "dof2": 270, "dof3": 340, "dof4": 340, "dof5": 300, "msleep": 2000}
+                "move": {"dof0": 385, "dof1": 395, "dof2": 270, "dof3": 340, "dof4": 340, "dof5": 300, "msleep": 5500}
         },
 	"pickupCenter": {
 		"setup": {"dof1":300, "msleep": 2000}, 
 		"move": {"dof0": 385, "dof1": 305, "dof2": 303, "dof3": 245, "dof4": 340, "dof5": 420, "msleep": 7000},
-		"action": {"dof5": 220, "msleep": 1000},
+		"action": {"dof5": 240, "msleep": 1000},
 		"exit": {"dof1": 350, "msleep": 1000}
 	},
 	"pickupOne": {
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 385, "dof1": 305, "dof2": 285, "dof3": 245, "dof4": 340, "dof5": 420, "msleep": 7000},
-                "action": {"dof5": 220, "msleep": 1000},
+                "action": {"dof5": 240, "msleep": 1000},
                 "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
 	},
         "pickupTwo": {
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 390, "dof1": 305, "dof2": 302, "dof3": 250, "dof4": 340, "dof5": 420, "msleep": 7000},
-                "action": {"dof5": 220, "msleep": 1000},
+                "action": {"dof5": 240, "msleep": 1000},
                 "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
         },
         "pickupThree": {
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 375, "dof1": 305, "dof2": 308, "dof3": 250, "dof4": 340, "dof5": 420, "msleep": 7000},
-                "action": {"dof5": 220, "msleep": 1000},
+                "action": {"dof5": 240, "msleep": 1000},
                 "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
         },
         "pickupFour": {
                 "setup": {"dof1":300, "msleep": 2000}, 
                 "move": {"dof0": 385, "dof1": 300, "dof2": 330, "dof3": 290, "dof4": 340, "dof5": 420, "msleep": 7000},
-                "action": {"dof5": 220, "msleep": 1000},
+                "action": {"dof5": 240, "msleep": 1000},
                 "exit": {"dof1": 350, "dof2": 280, "msleep": 1000}
         },
 	"zones": {
-		"one": {"xmin":360,"xmax":430,"ymin":350,"ymax":525},
-                "two": {"xmin":465,"xmax":625,"ymin":205,"ymax":335},
+		"one": {"xmin":360,"xmax":464,"ymin":350,"ymax":525},
+                "two": {"xmin":465,"xmax":625,"ymin":205,"ymax":349},
                 "three": {"xmin":125,"xmax":285,"ymin":190,"ymax":295},
-                "four": {"xmin":355,"xmax":500,"ymin":50,"ymax":175}
+                "four": {"xmin":355,"xmax":500,"ymin":50,"ymax":189}
 	}
 }
