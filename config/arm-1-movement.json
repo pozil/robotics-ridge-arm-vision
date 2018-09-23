@@ -29,7 +29,7 @@
 	},
 	"picture": {
 		"setup": {"dof1": 350, "dof2": 350, "msleep": 2500},
-                "move": {"dof0": 277, "dof1": 335, "dof2": 255, "dof3": 395, "dof4": 300, "dof5": 300, "msleep": 2000}
+                "move": {"dof0": 277, "dof1": 335, "dof2": 255, "dof3": 395, "dof4": 300, "dof5": 300, "msleep": 5000}
         },
 	"pickupCenter": {
 		"setup": {"dof1":300, "msleep": 2000}, 
