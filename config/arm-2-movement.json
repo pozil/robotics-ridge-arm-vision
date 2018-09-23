@@ -23,10 +23,10 @@
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 267, "dof1": 375, "dof2": 373, "dof3": 265, "dof4": 340, "msleep": 8500},
+		"move": {"dof0": 267, "dof1": 380, "dof2": 373, "dof3": 265, "dof4": 340, "msleep": 8500},
 		"action2": {"dof5": 460, "msleep": 2000},
-		"action": {"dof1": 360, "dof3": 315, "msleep": 1000},
-		"action3": {"dof1":365, "dof3": 265, "msleep": 1000},
+		"action": {"dof1": 370, "dof3": 315, "msleep": 1000},
+		"action3": {"dof1":375, "dof3": 265, "msleep": 1000},
 		"exit" : {"dof0": 300, "dof1": 365, "dof5": 350, "msleep": 1000}
 	},
 	"picture": {
