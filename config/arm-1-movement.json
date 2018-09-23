@@ -21,7 +21,7 @@
 	},
 	"dropoff": {
 		"setup" : {"dof1": 350, "dof2": 350, "msleep": 1500}, 
-		"move": {"dof0": 396, "dof1": 325, "dof2": 350, "dof3": 340, "dof4": 310, "msleep": 10000},
+		"move": {"dof0": 396, "dof1": 330, "dof2": 350, "dof3": 340, "dof4": 310, "msleep": 10000},
 		"action2": {"dof5": 460, "msleep": 2000},
 		"action": {"dof1": 320, "dof2": 340, "dof3": 370, "msleep": 1000},
 		"action3": {"dof3": 340, "msleep": 1000},
@@ -39,22 +39,22 @@
 	},
 	"pickupOne": {
 		"move": {"dof0": 275, "dof1": 245, "dof2": 272, "dof3": 365, "dof4": 300, "dof5": 500, "msleep": 9000},
-		"action": {"dof5": 230, "msleep": 2000},
+		"action": {"dof5": 250, "msleep": 2000},
 		"exit": {"dof1": 335,"dof2": 255, "msleep": 1000}
 	},
         "pickupTwo": {
                 "move": {"dof0": 285, "dof1": 245, "dof2": 290, "dof3": 350, "dof4": 300, "dof5": 500, "msleep": 9000},
-		"action": {"dof5": 240, "msleep": 2000},
+		"action": {"dof5": 250, "msleep": 2000},
 		"exit": {"dof1": 335, "dof2": 255, "msleep": 1000}
         },
         "pickupThree": {
                 "move": {"dof0": 268, "dof1": 245, "dof2": 298, "dof3": 350, "dof4": 300, "dof5": 500, "msleep": 8000},
-		"action": {"dof5": 230, "msleep": 1000},
+		"action": {"dof5": 250, "msleep": 1000},
 		"exit": {"dof1": 335, "dof2": 255, "msleep": 1000}
         },
         "pickupFour": {
                 "move": {"dof0": 280, "dof1": 240, "dof2": 305, "dof3": 330, "dof4": 310, "dof5": 500, "msleep": 8000},
-		"action": {"dof5": 230, "msleep": 1000},
+		"action": {"dof5": 250, "msleep": 1000},
 		"exit": {"dof1": 335, "dof2": 255, "msleep": 1000}
         },
         "zones": {
