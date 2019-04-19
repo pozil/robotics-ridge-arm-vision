@@ -39,22 +39,12 @@ function sleep(duration) {
 
 startApp = () => {
   sfdc.init(onArmPickupRequested, onArmPickupConfirmed)
-  .then(() => {
-    return arm.init(false);
-  })
-  .then(() => {
-    return arm.positionToCapturePicture();
-  })
-  .then(() => {
-    return sleep(1000);
-  })
-  .then(() => {
-    return arm.capturePicture();
-  })
-  .then((picture) => {
-    return sfdc.uploadPicture(picture)
-  })
-  .catch((error) => {
+  .then(arm.init(false))
+  .then(arm.positionToCapturePicture())
+  .then(sleep(1000))
+  .then(arm.capturePicture())
+  .then(picture => sfdc.uploadPicture(picture))
+  .catch(error => {
     LOG.error(error);
   });
 }

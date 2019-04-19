@@ -1,5 +1,5 @@
 {
-  "name": "tdx18-robotics-arm-vision",
+  "name": "robotics-ridge-arm-vision",
   "version": "1.0.0",
   "author": "Philippe Ozil",
   "description": "TDX18 Robotics - ARM vision running on Raspberry Pi",
@@ -9,7 +9,7 @@
   },
   "main": "index.js",
   "dependencies": {
-    "adafruit-i2c-pwm-driver": "git://github.com/pozil/adafruit-i2c-pwm-driver.git",
+    "adafruit-i2c-pwm-driver-async": "^1.0.0",
     "cometd-node-promise-client": "^1.1.2",
     "dotenv": "^5.0.1",
     "node-raspistill": "0.0.14",

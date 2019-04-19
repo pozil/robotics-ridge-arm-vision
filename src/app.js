@@ -5,11 +5,10 @@ const Winston = require('winston'),
   SalesforcePlatform = require('./salesforce-platform'),
   os = require('os');
 
-const HOSTNAME = process.env.hostname || os.hostname();
+let HOSTNAME = process.env.hostname || os.hostname();
 if (HOSTNAME !== 'arm-1' && HOSTNAME !== 'arm-2') {
-  console.log('ERROR: invalid hostname: '+ HOSTNAME);
-  console.log('Hostname must be arm-1 or arm-2');
-  process.exit(-1);
+  console.log(`WARNING: invalid hostname ${HOSTNAME}. Falling back to arm-1`);
+  HOSTNAME = 'arm-1';
 }
 
 // Configure logs
@@ -25,7 +24,8 @@ Winston.loggers.get('SFDC').transports.console.level='debug';
 Winston.loggers.get('COMETD').transports.console.level='info';
 
 const sfdc = new SalesforcePlatform(HOSTNAME);
-const arm = new ARM(HOSTNAME);
+const isMockArm = process.env.isMockArm;
+const arm = new ARM(HOSTNAME, isMockArm);
 
 let isShuttingDown = false;
 shutdown = () => {
@@ -37,9 +37,8 @@ shutdown = () => {
   Promise.all([
     sfdc.disconnect(),
     arm.disconnect()
-  ]).then(() => {
-    process.exit(0);
-  }).catch(error => {
+  ]).then(process.exit(0))
+  .catch(error => {
     LOG.error(error);
     process.exit(-1);
   });
@@ -96,12 +95,8 @@ onPlatformEvent = platformEvent => {
 
 onArmPickupRequested = eventData => {
   arm.positionToCapturePicture()
-  .then(() => {
-    return arm.capturePicture();
-  })
-  .then(picture => {
-    return sfdc.uploadPicture(picture)
-  })
+  .then(arm.capturePicture())
+  .then(picture => sfdc.uploadPicture(picture))
   .catch(error => {
     LOG.error(error);
   });
@@ -109,9 +104,7 @@ onArmPickupRequested = eventData => {
 
 onArmPickupConfirmed = (eventData) => {
   arm.grabAndTransferPayload(eventData)
-  .then(() => {
-    return sfdc.notifyPickupCompleted();
-  })
+  .then(sfdc.notifyPickupCompleted())
   .catch(error => {
     LOG.error(error);
   });
