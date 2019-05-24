@@ -12,21 +12,21 @@ const LOG = Winston.loggers.get('ARM');
 const TARGETS = {
   home: { // Move to home position
     'arm-1': [
-      {channel: 0, target: 370},
+      {channel: 0, target: 415},
       {channel: 1, target: 440},
       {channel: 2, target: 290},
       {channel: 3, target: 330},
-      {channel: 4, target: 330},
+      {channel: 4, target: 345},
       {channel: 5, target: 320},
     ]
   },
   positionToCapturePicture: { // Move above object, lower arm, rotate wrist and open claw
     'arm-1': [
-      {channel: 0, target: 330},
+      {channel: 0, target: 415},
       {channel: 1, target: 420},
       {channel: 2, target: 290},
       {channel: 3, target: 330},
-      {channel: 4, target: 330},
+      {channel: 4, target: 345},
       {channel: 5, target: 320},
     ]
   },
@@ -37,32 +37,34 @@ const TARGETS = {
   },
   movePayloadPlastic: {
     'arm-1': [
-      {channel: 0, target: 330},
-      {channel: 1, target: 330},
+      {channel: 0, target: 400},
+      {channel: 1, target: 420},
     ]
   },
   movePayloadPaper: { 
     'arm-1': [
-      {channel: 0, target: 330},
-      {channel: 1, target: 330},
+      {channel: 0, target: 406},
+      {channel: 1, target: 343},
+      {channel: 2, target: 321},
     ]
   },
   movePayloadMetal: { 
     'arm-1': [
-      {channel: 0, target: 330},
+      {channel: 0, target: 430},
       {channel: 1, target: 330},
     ]
   },
   moveToTrain: { 
     'arm-1': [
-      {channel: 0, target: 370},
+      {channel: 0, target: 355},
       {channel: 1, target: 340},
-      {channel: 2, target: 300},
+      {channel: 2, target: 340},
     ]
   },
   dropOnTrain: {
     'arm-1':[
-      {channel: 1, target: 330},
+      {channel: 1, target: 340},
+      {channel: 2, target: 320},
       {channel: 5, target: 310},
     ]
   }
