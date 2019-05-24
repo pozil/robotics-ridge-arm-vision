@@ -54,6 +54,9 @@ process.once('SIGTERM', shutdown);
 
 const EVENT_ARM_PICKUP_REQUESTED = 'ARM_Pickup_Requested';
 const EVENT_ARM_PICKUP_CONFIRMED = 'ARM_Pickup_Confirmed';
+const PAPER_CUBE = 'paper';
+const PLASTIC_CUBE = 'plastic';
+const METAL_CUBE = 'metal';
 
 
 waitForInternetThenStartApp = () => {

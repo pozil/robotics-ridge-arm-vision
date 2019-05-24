@@ -12,55 +12,81 @@ const LOG = Winston.loggers.get('ARM');
 const TARGETS = {
   home: { // Move to home position
     'arm-1': [
-      {channel: 0, target: 1500},
-      {channel: 1, target: 1500},
-      {channel: 2, target: 1500},
-      {channel: 3, target: 1500},
-      {channel: 4, target: 1500},
-      {channel: 5, target: 1500},
+      {channel: 0, target: 370},
+      {channel: 1, target: 440},
+      {channel: 2, target: 290},
+      {channel: 3, target: 330},
+      {channel: 4, target: 330},
+      {channel: 5, target: 320},
     ]
   },
-
   positionToCapturePicture: { // Move above object, lower arm, rotate wrist and open claw
     'arm-1': [
-      {channel: 0, target: 1220},
-      {channel: 1, target: 1400},
-      {channel: 2, target: 1330},
-      {channel: 3, target: 1840},
-      {channel: 4, target: 1430},
-      {channel: 5, target: 2000},
+      {channel: 0, target: 330},
+      {channel: 1, target: 420},
+      {channel: 2, target: 290},
+      {channel: 3, target: 330},
+      {channel: 4, target: 330},
+      {channel: 5, target: 320},
     ]
   },
-
-  lowerArmToGrabPayload: { // Lower arm to grab payload
+  closeClaw: {
     'arm-1': [
-      {channel: 1, target: 1050},
-      {channel: 2, target: 1500},
+      {channel: 5, target: 250},
     ]
   },
-
-  movePayload1: { // Turns away from object and raise arm
+  movePayloadPlastic: {
     'arm-1': [
-      {channel: 1, target: 1500},
+      {channel: 0, target: 330},
+      {channel: 1, target: 330},
     ]
   },
-
-  movePayload2: { // Turns away from object and raise arm
+  movePayloadPaper: { 
     'arm-1': [
-      {channel: 0, target: 1600},
-      {channel: 1, target: 1440},
-      {channel: 2, target: 1600},
+      {channel: 0, target: 330},
+      {channel: 1, target: 330},
     ]
   },
+  movePayloadMetal: { 
+    'arm-1': [
+      {channel: 0, target: 330},
+      {channel: 1, target: 330},
+    ]
+  },
+  moveToTrain: { 
+    'arm-1': [
+      {channel: 0, target: 370},
+      {channel: 1, target: 340},
+      {channel: 2, target: 300},
+    ]
+  },
+  dropOnTrain: {
+    'arm-1':[
+      {channel: 1, target: 330},
+      {channel: 5, target: 310},
+    ]
+  }
 }
 
 const SLEEPS = {
-  movePayload1: {
+  closeClaw: {
+    'arm-1': 1000,
+  },
+  movePayloadPlastic: {
     'arm-1': 6000,
   },
-  dropPayload: {
+  movePayloadPaper: {
+    'arm-1': 6000,
+  },
+  movePayloadMetal: {
+    'arm-1': 6000,
+  },
+  moveToTrain: {
+    'arm-1': 6000,
+  },
+  dropOnTrain: {
     'arm-1': 4400,
-  }
+  },
 }
 
 
@@ -117,35 +143,36 @@ module.exports = class ARM {
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
     // Get object position
+    var thingsFound = new Array(); 
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
+
     probabilities.forEach(probability => {
-      const box = probability.boundingBox;
-      probability.center = {
-        x : box.maxX - box.minX,
-        y : box.maxY - box.minY,
-      };
+        thingsFound.push(probability.label);
     });
+
     console.log(probabilities);
+    //if(eventData.Payload__c: thingsFound)
+    //{}
     // TODO: do something with object position
 
-    // Lower arm
-    return this.setTargets(TARGETS.lowerArmToGrabPayload[this.hostname])
-      .then(usleep(6500))
-      // Close claw
-      .then(this.setTarget(5, 1150))
-      .then(usleep(1000))
-      // Start to raise arm
-      .then(this.setTargets(TARGETS.movePayload1[this.hostname]))
-      .then(usleep(SLEEPS.movePayload1[this.hostname]))
-      // Turn away from object and raise arm
-      .then(this.setTargets(TARGETS.movePayload2[this.hostname]))
-      .then(usleep(SLEEPS.dropPayload[this.hostname]))
-      // Open claw
-      .then(this.setTarget(5, 1700))
-      .then(usleep(2000))
-      // Go home
+    //{"probabilities":[{"probability":0.9948178,"label":"Soccer","boundingBox":{"minY":111,"minX":376,"maxY":213,"maxX":469}},{"probability":0.99054104,"label":"Globe","boundingBox":{"minY":289,"minX":502,"maxY":382,"maxX":589}},{"probability":0.99855214,"label":"Basketball","boundingBox":{"minY":460,"minX":380,"maxY":551,"maxX":476}}]}
+
+    return this.setTargets(TARGETS.movePayloadPaper[this.hostname])
+      .then(usleep(SLEEPS.movePayloadPaper[this.hostname]))
+
+      .then(this.setTarget(TARGETS.closeClaw[this.hostname]))
+      .then(usleep(SLEEPS.closeClaw[this.hostname]))
+
+      .then(this.setTargets(TARGETS.moveToTrain[this.hostname]))
+      .then(usleep(SLEEPS.moveToTrain[this.hostname]))
+
+      .then(this.setTarget(TARGETS.dropOnTrain[this.hostname]))
+      .then(usleep(SLEEPS.dropOnTrain[this.hostname]))
+
       .then(this.goHome())
   }
+
+  
 
   setTarget(channel, target) {
     return this.driver.setPWM(channel, 0, target);
