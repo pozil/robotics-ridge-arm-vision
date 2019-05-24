@@ -118,6 +118,7 @@ module.exports = class SalesforcePlatform {
 
   // Send image to apex REST resource
   uploadPicture(picture) {
+    LOG.debug(picture)
     return new Promise((resolve, reject) => {
       const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'ArmVision/'+ this.device.Id);
       apiRequestOptions.headers['Content-Type'] = 'image/jpg';

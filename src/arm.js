@@ -130,7 +130,6 @@ module.exports = class ARM {
   capturePicture() {
     LOG.debug('Capturing picture');
     if (this.camera === null) {
-      LOG.debug('photo?');
       return new Promise(resolve => resolve());
     }
     return this.camera.takePhoto();
