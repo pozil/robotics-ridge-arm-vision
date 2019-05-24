@@ -8,7 +8,6 @@ Winston.loggers.add('ARM', {
 });
 const LOG = Winston.loggers.get('ARM');
 
-
 const TARGETS = {
   home: { // Move to home position
     'arm-1': [
@@ -131,6 +130,7 @@ module.exports = class ARM {
   capturePicture() {
     LOG.debug('Capturing picture');
     if (this.camera === null) {
+      LOG.debug('photo?');
       return new Promise(resolve => resolve());
     }
     return this.camera.takePhoto();
