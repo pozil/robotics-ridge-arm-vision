@@ -72,13 +72,7 @@ const SLEEPS = {
   closeClaw: {
     'arm-1': 1000,
   },
-  movePayloadPlastic: {
-    'arm-1': 6000,
-  },
-  movePayloadPaper: {
-    'arm-1': 6000,
-  },
-  movePayloadMetal: {
+  movePayload: {
     'arm-1': 6000,
   },
   moveToTrain: {
@@ -142,23 +136,31 @@ module.exports = class ARM {
 
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
-    // Get object position
     var thingsFound = new Array(); 
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
+    var movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
 
     probabilities.forEach(probability => {
         thingsFound.push(probability.label);
     });
 
     console.log(probabilities);
-    //if(eventData.Payload__c: thingsFound)
-    //{}
-    // TODO: do something with object position
+    if(thingsFound.includes(eventData.Payload__c)){
+      switch (eventData.Payload__c){
+        case 'paper':
+          movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
+        break;
+        case 'plastic':
+          movePickupPayload = TARGETS.movePayloadPlastic[this.hostname];
+        break;
+        case 'plastic':
+          movePickupPayload = TARGETS.movePayloadMetal[this.hostname];
+        break;
+      }
+    }
 
-    //{"probabilities":[{"probability":0.9948178,"label":"Soccer","boundingBox":{"minY":111,"minX":376,"maxY":213,"maxX":469}},{"probability":0.99054104,"label":"Globe","boundingBox":{"minY":289,"minX":502,"maxY":382,"maxX":589}},{"probability":0.99855214,"label":"Basketball","boundingBox":{"minY":460,"minX":380,"maxY":551,"maxX":476}}]}
-
-    return this.setTargets(TARGETS.movePayloadPaper[this.hostname])
-      .then(usleep(SLEEPS.movePayloadPaper[this.hostname]))
+    return this.setTargets(movePickupPayload)
+      .then(usleep(SLEEPS.movePayload[this.hostname]))
 
       .then(this.setTarget(TARGETS.closeClaw[this.hostname]))
       .then(usleep(SLEEPS.closeClaw[this.hostname]))
