@@ -139,7 +139,7 @@ module.exports = class ARM {
     LOG.debug('Grabing and tranfering payload');
     var thingsFound = new Array(); 
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
-    var movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
+    //var movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
 
     probabilities.forEach(probability => {
         thingsFound.push(probability.label);
@@ -165,16 +165,16 @@ module.exports = class ARM {
     }*/
 
     return this.setTargets(TARGETS.movePayloadMetal[this.hostname])
-      .then(() => usleep(SLEEPS.movePayload[this.hostname]))
+      .then(() => usleep(1000))
 
       .then(() => this.setTarget(TARGETS.closeClaw[this.hostname]))
-      .then(() => usleep(SLEEPS.closeClaw[this.hostname]))
+      .then(() => usleep(1000))
 
       .then(() => this.setTargets(TARGETS.moveToTrain[this.hostname]))
-      .then(() => usleep(SLEEPS.moveToTrain[this.hostname]))
+      .then(() => usleep(6000))
 
       .then(() => this.setTarget(TARGETS.dropOnTrain[this.hostname]))
-      .then(() => usleep(SLEEPS.dropOnTrain[this.hostname]))
+      .then(() => usleep(6000))
 
       .then(() => this.goHome())
   }
