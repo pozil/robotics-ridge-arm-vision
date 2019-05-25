@@ -55,7 +55,6 @@ process.once('SIGTERM', shutdown);
 const EVENT_ARM_PICKUP_REQUESTED = 'ARM_Pickup_Requested';
 const EVENT_ARM_PICKUP_CONFIRMED = 'ARM_Pickup_Confirmed';
 
-
 waitForInternetThenStartApp = () => {
   httpClient.get({url: 'https://status.salesforce.com/status', timeout: 5000}, (error, response, body) => {
     if (!response || response.statusCode !== 404) {
@@ -95,7 +94,7 @@ onPlatformEvent = platformEvent => {
 
 onArmPickupRequested = eventData => {
   arm.positionToCapturePicture()
-  .then(arm.capturePicture())
+  .then(() => arm.capturePicture())
   .then(picture => sfdc.uploadPicture(picture))
   .catch(error => {
     LOG.error(error);
@@ -104,7 +103,7 @@ onArmPickupRequested = eventData => {
 
 onArmPickupConfirmed = (eventData) => {
   arm.grabAndTransferPayload(eventData)
-  .then(sfdc.notifyPickupCompleted())
+  .then(() => sfdc.notifyPickup('ARM_Pickup_Completed'))
   .catch(error => {
     LOG.error(error);
   });

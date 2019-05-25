@@ -118,17 +118,19 @@ module.exports = class SalesforcePlatform {
 
   // Send image to apex REST resource
   uploadPicture(picture) {
+    
     return new Promise((resolve, reject) => {
-      const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'ArmVision/'+ this.device.Id);
+      const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'Device/'+ this.device.Id);
       apiRequestOptions.headers['Content-Type'] = 'image/jpg';
       apiRequestOptions.body = picture;
+
       httpClient.post(apiRequestOptions, (error, response, body) => {
         if (response && response.statusCode < 200 && response.statusCode > 299) {
           LOG.error('Failed to upload ARM image (HTTP '+ response.statusCode +')', body);
-          reject();
+          return reject();
         } else if (error) {
           LOG.error('Failed to upload ARM image', error);
-          reject(error);
+          return reject(error);
         }
         LOG.info('Successfully uploaded ARM image')
         resolve();
@@ -136,11 +138,11 @@ module.exports = class SalesforcePlatform {
     });
   }
 
-  notifyPickupCompleted() {
+  notifyPickup(eventType) {
     return new Promise((resolve, reject) => {
 
       const eventData = {
-        Event__c: 'ARM_Pickup_Completed',
+        Event__c: eventType,
         Device_Id__c: this.device.Id,
         Feed_Id__c: this.device.Feed__c
       };
@@ -160,4 +162,5 @@ module.exports = class SalesforcePlatform {
       });
     });
   }
+  
 }

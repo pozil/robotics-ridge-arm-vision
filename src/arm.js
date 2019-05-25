@@ -1,5 +1,5 @@
 const Winston = require('winston'),
-  { PwmDriver, usleep } = require('adafruit-i2c-pwm-driver-async'),
+  { PwmDriver, usleep, sleep } = require('adafruit-i2c-pwm-driver-async'),
   Raspistill = require('node-raspistill').Raspistill;
 
 // Configure logs
@@ -8,59 +8,80 @@ Winston.loggers.add('ARM', {
 });
 const LOG = Winston.loggers.get('ARM');
 
-
 const TARGETS = {
   home: { // Move to home position
     'arm-1': [
-      {channel: 0, target: 1500},
-      {channel: 1, target: 1500},
-      {channel: 2, target: 1500},
-      {channel: 3, target: 1500},
-      {channel: 4, target: 1500},
-      {channel: 5, target: 1500},
+      {channel: 0, target: 415},
+      {channel: 1, target: 440},
+      {channel: 2, target: 290},
+      {channel: 3, target: 330},
+      {channel: 4, target: 345},
+      {channel: 5, target: 320},
     ]
   },
-
   positionToCapturePicture: { // Move above object, lower arm, rotate wrist and open claw
     'arm-1': [
-      {channel: 0, target: 1220},
-      {channel: 1, target: 1400},
-      {channel: 2, target: 1330},
-      {channel: 3, target: 1840},
-      {channel: 4, target: 1430},
-      {channel: 5, target: 2000},
+      {channel: 0, target: 415},
+      {channel: 1, target: 420},
+      {channel: 2, target: 290},
+      {channel: 3, target: 330},
+      {channel: 4, target: 345},
+      {channel: 5, target: 320},
     ]
   },
-
-  lowerArmToGrabPayload: { // Lower arm to grab payload
+  closeClaw: {
     'arm-1': [
-      {channel: 1, target: 1050},
-      {channel: 2, target: 1500},
+      {channel: 5, target: 250},
     ]
   },
-
-  movePayload1: { // Turns away from object and raise arm
+  movePayloadPlastic: {
     'arm-1': [
-      {channel: 1, target: 1500},
+      {channel: 0, target: 400},
+      {channel: 1, target: 420},
     ]
   },
-
-  movePayload2: { // Turns away from object and raise arm
+  movePayloadPaper: { 
     'arm-1': [
-      {channel: 0, target: 1600},
-      {channel: 1, target: 1440},
-      {channel: 2, target: 1600},
+      {channel: 0, target: 406},
+      {channel: 1, target: 343},
+      {channel: 2, target: 321},
     ]
   },
+  movePayloadMetal: { 
+    'arm-1': [
+      {channel: 0, target: 430},
+      {channel: 1, target: 330},
+    ]
+  },
+  moveToTrain: { 
+    'arm-1': [
+      {channel: 0, target: 355},
+      {channel: 1, target: 360},
+      {channel: 2, target: 340},
+    ]
+  },
+  dropOnTrain: {
+    'arm-1':[
+      {channel: 1, target: 340},
+      {channel: 2, target: 320},
+      {channel: 5, target: 310},
+    ]
+  }
 }
 
 const SLEEPS = {
-  movePayload1: {
+  closeClaw: {
+    'arm-1': 1000,
+  },
+  movePayload: {
     'arm-1': 6000,
   },
-  dropPayload: {
+  moveToTrain: {
+    'arm-1': 6000,
+  },
+  dropOnTrain: {
     'arm-1': 4400,
-  }
+  },
 }
 
 
@@ -85,9 +106,9 @@ module.exports = class ARM {
   init() {
     LOG.debug('Connecting to ARM');
     return this.driver.init()
-      .then(this.driver.setPWMFreq(50))
-      .then(this.goHome())
-      .then(usleep(6000));
+      .then(() => this.driver.setPWMFreq(50))
+      .then(() => this.goHome())
+      .then(() => sleep(6));
   }
 
   disconnect() {
@@ -116,36 +137,51 @@ module.exports = class ARM {
 
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
-    // Get object position
+    var movePickupPayload;
+    var foundItem = false; 
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
-    probabilities.forEach(probability => {
-      const box = probability.boundingBox;
-      probability.center = {
-        x : box.maxX - box.minX,
-        y : box.maxY - box.minY,
-      };
-    });
-    console.log(probabilities);
-    // TODO: do something with object position
 
-    // Lower arm
-    return this.setTargets(TARGETS.lowerArmToGrabPayload[this.hostname])
-      .then(usleep(6500))
-      // Close claw
-      .then(this.setTarget(5, 1150))
-      .then(usleep(1000))
-      // Start to raise arm
-      .then(this.setTargets(TARGETS.movePayload1[this.hostname]))
-      .then(usleep(SLEEPS.movePayload1[this.hostname]))
-      // Turn away from object and raise arm
-      .then(this.setTargets(TARGETS.movePayload2[this.hostname]))
-      .then(usleep(SLEEPS.dropPayload[this.hostname]))
-      // Open claw
-      .then(this.setTarget(5, 1700))
-      .then(usleep(2000))
-      // Go home
-      .then(this.goHome())
+    probabilities.forEach(probability => {
+        if(probability.label == eventData.Payload__c)
+        {
+          foundItem = true;
+        }
+
+    });
+
+    if(foundItem){
+      switch (eventData.Payload__c){
+        case 'paper':
+          movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
+        break;
+        case 'plastic':
+          movePickupPayload = TARGETS.movePayloadPlastic[this.hostname];
+        break;
+        case 'plastic':
+          movePickupPayload = TARGETS.movePayloadMetal[this.hostname];
+        break;
+      }
+    }
+    else{
+      return sfdc.notifyPickup('ARM_Pickup_Rejected');
+    }
+
+    return this.setTargets(movePickupPayload)
+      .then(() => sleep(7))
+
+      .then(() => this.setTargets(TARGETS.closeClaw[this.hostname]))
+      .then(() => sleep(2))
+
+      .then(() => this.setTargets(TARGETS.moveToTrain[this.hostname]))
+      .then(() => sleep(6))
+
+      .then(() => this.setTargets(TARGETS.dropOnTrain[this.hostname]))
+      .then(() => sleep(2))
+
+      .then(() => this.goHome())
   }
+
+  
 
   setTarget(channel, target) {
     return this.driver.setPWM(channel, 0, target);
