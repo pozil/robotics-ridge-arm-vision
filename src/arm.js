@@ -1,5 +1,5 @@
 const Winston = require('winston'),
-  { PwmDriver, usleep } = require('adafruit-i2c-pwm-driver-async'),
+  { PwmDriver, usleep, sleep } = require('adafruit-i2c-pwm-driver-async'),
   Raspistill = require('node-raspistill').Raspistill;
 
 // Configure logs
@@ -165,7 +165,7 @@ module.exports = class ARM {
     }*/
 
     return this.setTargets(TARGETS.movePayloadMetal[this.hostname])
-      .then(() => usleep(1000))
+      .then(() => sleep(1000))
 
       .then(() => this.setTarget(TARGETS.closeClaw[this.hostname]))
       .then(() => usleep(1000))
