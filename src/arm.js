@@ -144,18 +144,22 @@ module.exports = class ARM {
     probabilities.forEach(probability => {
         thingsFound.push(probability.label);
     });
+    console.log(thingsFound)
 
     console.log(probabilities);
     if(thingsFound.includes(eventData.Payload__c)){
       switch (eventData.Payload__c){
         case 'paper':
           movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
+          console.log(movePickupPayload)
         break;
         case 'plastic':
           movePickupPayload = TARGETS.movePayloadPlastic[this.hostname];
+          console.log(movePickupPayload)
         break;
         case 'plastic':
           movePickupPayload = TARGETS.movePayloadMetal[this.hostname];
+          console.log(movePickupPayload)
         break;
       }
     }
