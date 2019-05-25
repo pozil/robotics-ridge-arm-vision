@@ -56,7 +56,7 @@ const TARGETS = {
   moveToTrain: { 
     'arm-1': [
       {channel: 0, target: 355},
-      {channel: 1, target: 340},
+      {channel: 1, target: 360},
       {channel: 2, target: 340},
     ]
   },
@@ -166,7 +166,7 @@ module.exports = class ARM {
       }
     }
 
-    return this.setTargets(TARGETS.movePayloadMetal[this.hostname])
+    return this.setTargets(movePickupPayload)
       .then(() => sleep(7))
 
       .then(() => this.setTargets(TARGETS.closeClaw[this.hostname]))
@@ -176,7 +176,7 @@ module.exports = class ARM {
       .then(() => sleep(6))
 
       .then(() => this.setTargets(TARGETS.dropOnTrain[this.hostname]))
-      .then(() => sleep(6))
+      .then(() => sleep(2))
 
       .then(() => this.goHome())
   }
