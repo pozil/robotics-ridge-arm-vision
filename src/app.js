@@ -94,7 +94,7 @@ onPlatformEvent = platformEvent => {
 
 onArmPickupRequested = eventData => {
   arm.positionToCapturePicture()
-  .then(arm.capturePicture())
+  .then(() => arm.capturePicture())
   .then(picture => sfdc.uploadPicture(picture))
   .catch(error => {
     LOG.error(error);
