@@ -165,6 +165,9 @@ module.exports = class ARM {
         break;
       }
     }
+    else{
+      
+    }
 
     return this.setTargets(movePickupPayload)
       .then(() => sleep(7))
