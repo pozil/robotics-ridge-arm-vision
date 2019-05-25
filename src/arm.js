@@ -108,7 +108,7 @@ module.exports = class ARM {
     return this.driver.init()
       .then(() => this.driver.setPWMFreq(50))
       .then(() => this.goHome())
-      .then(() => usleep(6000));
+      .then(() => sleep(6));
   }
 
   disconnect() {
@@ -165,16 +165,16 @@ module.exports = class ARM {
     }*/
 
     return this.setTargets(TARGETS.movePayloadMetal[this.hostname])
-      .then(() => sleep(1000))
+      .then(() => sleep(1))
 
       .then(() => this.setTarget(TARGETS.closeClaw[this.hostname]))
-      .then(() => usleep(1000))
+      .then(() => sleep(1))
 
       .then(() => this.setTargets(TARGETS.moveToTrain[this.hostname]))
-      .then(() => usleep(6000))
+      .then(() => sleep(6))
 
       .then(() => this.setTarget(TARGETS.dropOnTrain[this.hostname]))
-      .then(() => usleep(6000))
+      .then(() => sleep(6))
 
       .then(() => this.goHome())
   }
