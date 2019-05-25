@@ -137,17 +137,19 @@ module.exports = class ARM {
 
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
-    var thingsFound = new Array(); 
+    var thingsFound = new Array();
+    var foundItem = false; 
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
-    //var movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
 
     probabilities.forEach(probability => {
-        thingsFound.push(probability.label);
-    });
-    console.log('i found' + thingsFound)
+        if(probability.label == eventData.Payload__c)
+        {
+          foundItem = true;
+        }
 
-    console.log(probabilities);
-    if(thingsFound.includes(eventData.Payload__c)){
+    });
+
+    if(foundItem){
       switch (eventData.Payload__c){
         case 'paper':
           movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
