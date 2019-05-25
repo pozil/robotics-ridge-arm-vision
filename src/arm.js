@@ -144,7 +144,7 @@ module.exports = class ARM {
     probabilities.forEach(probability => {
         thingsFound.push(probability.label);
     });
-    /** console.log('i found' + thingsFound)
+    console.log('i found' + thingsFound)
 
     console.log(probabilities);
     if(thingsFound.includes(eventData.Payload__c)){
@@ -162,7 +162,7 @@ module.exports = class ARM {
           console.log('should be metal' +movePickupPayload)
         break;
       }
-    }*/
+    }
 
     return this.setTargets(TARGETS.movePayloadMetal[this.hostname])
       .then(() => sleep(7))
