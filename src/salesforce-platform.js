@@ -138,11 +138,11 @@ module.exports = class SalesforcePlatform {
     });
   }
 
-  notifyPickupCompleted() {
+  notifyPickup(eventType) {
     return new Promise((resolve, reject) => {
 
       const eventData = {
-        Event__c: 'ARM_Pickup_Completed',
+        Event__c: eventType,
         Device_Id__c: this.device.Id,
         Feed_Id__c: this.device.Feed__c
       };
@@ -162,4 +162,5 @@ module.exports = class SalesforcePlatform {
       });
     });
   }
+  
 }

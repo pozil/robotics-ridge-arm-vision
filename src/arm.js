@@ -153,20 +153,17 @@ module.exports = class ARM {
       switch (eventData.Payload__c){
         case 'paper':
           movePickupPayload = TARGETS.movePayloadPaper[this.hostname];
-          console.log('should be paper' + movePickupPayload)
         break;
         case 'plastic':
           movePickupPayload = TARGETS.movePayloadPlastic[this.hostname];
-          console.log('should be plastic' + movePickupPayload)
         break;
         case 'plastic':
           movePickupPayload = TARGETS.movePayloadMetal[this.hostname];
-          console.log('should be metal' +movePickupPayload)
         break;
       }
     }
     else{
-      
+      return sfdc.notifyPickup('ARM_Pickup_Rejected');
     }
 
     return this.setTargets(movePickupPayload)
