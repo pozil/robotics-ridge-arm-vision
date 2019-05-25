@@ -118,11 +118,14 @@ module.exports = class SalesforcePlatform {
 
   // Send image to apex REST resource
   uploadPicture(picture) {
-    LOG.debug(picture)
+    
     return new Promise((resolve, reject) => {
       const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'ArmVision/'+ this.device.Id);
       apiRequestOptions.headers['Content-Type'] = 'image/jpg';
       apiRequestOptions.body = picture;
+
+      LOG.debug(apiRequestOptions);
+
       httpClient.post(apiRequestOptions, (error, response, body) => {
         if (response && response.statusCode < 200 && response.statusCode > 299) {
           LOG.error('Failed to upload ARM image (HTTP '+ response.statusCode +')', body);
