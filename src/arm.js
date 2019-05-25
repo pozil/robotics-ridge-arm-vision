@@ -165,15 +165,15 @@ module.exports = class ARM {
     }*/
 
     return this.setTargets(TARGETS.movePayloadMetal[this.hostname])
-      .then(() => sleep(6))
+      .then(() => sleep(7))
 
       .then(() => this.setTargets(TARGETS.closeClaw[this.hostname]))
-      .then(() => sleep(6))
+      .then(() => sleep(2))
 
       .then(() => this.setTargets(TARGETS.moveToTrain[this.hostname]))
       .then(() => sleep(6))
 
-      .then(() => this.setTarget(TARGETS.dropOnTrain[this.hostname]))
+      .then(() => this.setTargets(TARGETS.dropOnTrain[this.hostname]))
       .then(() => sleep(6))
 
       .then(() => this.goHome())
