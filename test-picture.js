@@ -39,10 +39,10 @@ function sleep(duration) {
 
 startApp = () => {
   sfdc.init(onArmPickupRequested, onArmPickupConfirmed)
-  .then(arm.init(false))
-  .then(arm.positionToCapturePicture())
-  .then(sleep(1000))
-  .then(arm.capturePicture())
+  .then(() => arm.init(false))
+  .then(() => arm.positionToCapturePicture())
+  .then(() => sleep(1000))
+  .then(() => arm.capturePicture())
   .then(picture => sfdc.uploadPicture(picture))
   .catch(error => {
     LOG.error(error);

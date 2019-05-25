@@ -106,9 +106,9 @@ module.exports = class ARM {
   init() {
     LOG.debug('Connecting to ARM');
     return this.driver.init()
-      .then(this.driver.setPWMFreq(50))
-      .then(this.goHome())
-      .then(usleep(6000));
+      .then(() => this.driver.setPWMFreq(50))
+      .then(() => this.goHome())
+      .then(() => usleep(6000));
   }
 
   disconnect() {
@@ -161,18 +161,18 @@ module.exports = class ARM {
     }
 
     return this.setTargets(movePickupPayload)
-      .then(usleep(SLEEPS.movePayload[this.hostname]))
+      .then(() => usleep(SLEEPS.movePayload[this.hostname]))
 
-      .then(this.setTarget(TARGETS.closeClaw[this.hostname]))
-      .then(usleep(SLEEPS.closeClaw[this.hostname]))
+      .then(() => this.setTarget(TARGETS.closeClaw[this.hostname]))
+      .then(() => usleep(SLEEPS.closeClaw[this.hostname]))
 
-      .then(this.setTargets(TARGETS.moveToTrain[this.hostname]))
-      .then(usleep(SLEEPS.moveToTrain[this.hostname]))
+      .then(() => this.setTargets(TARGETS.moveToTrain[this.hostname]))
+      .then(() => usleep(SLEEPS.moveToTrain[this.hostname]))
 
-      .then(this.setTarget(TARGETS.dropOnTrain[this.hostname]))
-      .then(usleep(SLEEPS.dropOnTrain[this.hostname]))
+      .then(() => this.setTarget(TARGETS.dropOnTrain[this.hostname]))
+      .then(() => usleep(SLEEPS.dropOnTrain[this.hostname]))
 
-      .then(this.goHome())
+      .then(() => this.goHome())
   }
 
   

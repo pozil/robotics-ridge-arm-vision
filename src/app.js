@@ -103,7 +103,7 @@ onArmPickupRequested = eventData => {
 
 onArmPickupConfirmed = (eventData) => {
   arm.grabAndTransferPayloadPaper(eventData)
-  .then(sfdc.notifyPickupCompleted())
+  .then(() => sfdc.notifyPickupCompleted())
   .catch(error => {
     LOG.error(error);
   });
