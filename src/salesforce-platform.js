@@ -120,7 +120,7 @@ module.exports = class SalesforcePlatform {
   uploadPicture(picture) {
     
     return new Promise((resolve, reject) => {
-      const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'ArmVision/'+ this.device.Id);
+      const apiRequestOptions = this.client.apex.createApexRequest(this.session, 'Device/'+ this.device.Id);
       apiRequestOptions.headers['Content-Type'] = 'image/jpg';
       apiRequestOptions.body = picture;
 
