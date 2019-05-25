@@ -137,7 +137,7 @@ module.exports = class ARM {
 
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
-    var thingsFound = new Array();
+    var movePickupPayload;
     var foundItem = false; 
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
 
