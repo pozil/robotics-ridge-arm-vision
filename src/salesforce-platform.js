@@ -124,8 +124,6 @@ module.exports = class SalesforcePlatform {
       apiRequestOptions.headers['Content-Type'] = 'image/jpg';
       apiRequestOptions.body = picture;
 
-      LOG.debug(apiRequestOptions);
-
       httpClient.post(apiRequestOptions, (error, response, body) => {
         if (response && response.statusCode < 200 && response.statusCode > 299) {
           LOG.error('Failed to upload ARM image (HTTP '+ response.statusCode +')', body);
