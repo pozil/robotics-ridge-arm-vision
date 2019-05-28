@@ -47,7 +47,7 @@ const TARGETS = {
   movePayloadPaper: {
     'arm-1': [
       {channel: 0, target: 356},
-      {channel: 1, target: 368},
+      {channel: 1, target: 364},
       {channel: 2, target: 320},
       {channel: 3, target: 495},
       {channel: 4, target: 386},
@@ -72,15 +72,15 @@ const TARGETS = {
   movePayloadToTrain: {
     'arm-1': [
       {channel: 0, target: 328},
-      {channel: 1, target: 380},
-      {channel: 2, target: 362},
+      {channel: 1, target: 365},
+      {channel: 2, target: 343},
       {channel: 3, target: 495},
       {channel: 4, target: 337},
     ]
   },
   lowerOnTrain: {
     'arm-1':[
-      {channel: 1, target: 340},
+      {channel: 1, target: 353},
     ]
   },
   dropOnTrain: {
@@ -164,11 +164,9 @@ module.exports = class ARM {
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
 
     probabilities.forEach(probability => {
-        if(probability.label == eventData.Payload__c)
-        {
+        if(probability.label == eventData.Payload__c) {
           foundItem = true;
         }
-
     });
 
     if(foundItem){
@@ -201,7 +199,7 @@ module.exports = class ARM {
       .then(() => sleep(5))
 
       .then(() => this.setTargets(TARGETS.lowerOnTrain[this.hostname]))
-      .then(() => sleep(3))
+      .then(() => sleep(3.2))
 
       .then(() => this.setTargets(TARGETS.dropOnTrain[this.hostname]))
       .then(() => sleep(2))
