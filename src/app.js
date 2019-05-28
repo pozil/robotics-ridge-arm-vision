@@ -54,6 +54,7 @@ process.once('SIGTERM', shutdown);
 
 const EVENT_ARM_PICKUP_REQUESTED = 'ARM_Pickup_Requested';
 const EVENT_ARM_PICKUP_CONFIRMED = 'ARM_Pickup_Confirmed';
+const EVENT_ARM_PICKUP_REJECTED = 'ARM_Pickup_Rejected';
 
 waitForInternetThenStartApp = () => {
   httpClient.get({url: 'https://status.salesforce.com/status', timeout: 5000}, (error, response, body) => {
@@ -89,6 +90,9 @@ onPlatformEvent = platformEvent => {
     case EVENT_ARM_PICKUP_CONFIRMED:
       onArmPickupConfirmed(eventData);
     break;
+    case EVENT_ARM_PICKUP_REJECTED:
+      onArmPickupRejected();
+    break;
   }
 }
 
@@ -109,6 +113,12 @@ onArmPickupConfirmed = (eventData) => {
   });
 }
 
+onArmPickupRejected = () => {
+  arm.goHome()
+  .catch(error => {
+    LOG.error(error);
+  });
+}
 
 // Wait for internet access then start app
 LOG.info('Checking internet connection...');
