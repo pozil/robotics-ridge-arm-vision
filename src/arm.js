@@ -204,9 +204,6 @@ module.exports = class ARM {
       .then(() => this.setTargets(TARGETS.dropOnTrain[this.hostname]))
       .then(() => sleep(2))
       .then(() => this.setTargets(TARGETS.movePayloadUp[this.hostname]))
-      .then(() => sleep(0.5))
-
-      .then(() => this.goHome())
   }
 
   setTarget(channel, target) {

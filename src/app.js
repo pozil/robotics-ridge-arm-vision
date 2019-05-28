@@ -108,6 +108,7 @@ onArmPickupRequested = eventData => {
 onArmPickupConfirmed = (eventData) => {
   arm.grabAndTransferPayload(eventData)
   .then(() => sfdc.notifyPickup('ARM_Pickup_Completed'))
+  .then(() => arm.goHome())
   .catch(error => {
     LOG.error(error);
   });
