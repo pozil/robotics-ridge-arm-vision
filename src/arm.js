@@ -110,7 +110,7 @@ module.exports = class ARM {
 
   constructor(hostname, isMockArm) {
     this.hostname = hostname;
-    this.driver = new PwmDriver({address: 0x40, device: '/dev/i2c-1', debug: true, i2cDebug: false, isMockDriver: isMockArm});
+    this.driver = new PwmDriver({address: 0x40, device: '/dev/i2c-1', debug: false, i2cDebug: false, isMockDriver: isMockArm});
     if (isMockArm) {
       this.camera = null;
     } else {
