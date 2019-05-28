@@ -11,22 +11,22 @@ const LOG = Winston.loggers.get('ARM');
 const TARGETS = {
   home: { // Move to home position
     'arm-1': [
-      {channel: 0, target: 415},
-      {channel: 1, target: 440},
-      {channel: 2, target: 290},
-      {channel: 3, target: 330},
-      {channel: 4, target: 345},
-      {channel: 5, target: 320},
+      {channel: 0, target: 410},
+      {channel: 1, target: 450},
+      {channel: 2, target: 300},
+      {channel: 3, target: 495},
+      {channel: 4, target: 450},
+      {channel: 5, target: 330},
     ]
   },
   positionToCapturePicture: { // Move above object, lower arm, rotate wrist and open claw
     'arm-1': [
-      {channel: 0, target: 415},
-      {channel: 1, target: 420},
-      {channel: 2, target: 290},
-      {channel: 3, target: 330},
+      {channel: 0, target: 365},
+      {channel: 1, target: 435},
+      {channel: 2, target: 300},
+      {channel: 3, target: 495},
       {channel: 4, target: 345},
-      {channel: 5, target: 320},
+      {channel: 5, target: 330},
     ]
   },
   closeClaw: {
@@ -36,35 +36,56 @@ const TARGETS = {
   },
   movePayloadPlastic: {
     'arm-1': [
-      {channel: 0, target: 400},
-      {channel: 1, target: 420},
+      {channel: 0, target: 378},
+      {channel: 1, target: 348},
+      {channel: 2, target: 348},
+      {channel: 3, target: 495},
+      {channel: 4, target: 360},
+      {channel: 5, target: 330},
     ]
   },
-  movePayloadPaper: { 
+  movePayloadPaper: {
     'arm-1': [
-      {channel: 0, target: 406},
-      {channel: 1, target: 343},
-      {channel: 2, target: 321},
+      {channel: 0, target: 356},
+      {channel: 1, target: 368},
+      {channel: 2, target: 320},
+      {channel: 3, target: 495},
+      {channel: 4, target: 386},
+      {channel: 5, target: 330},
     ]
   },
-  movePayloadMetal: { 
+  movePayloadMetal: {
     'arm-1': [
-      {channel: 0, target: 430},
-      {channel: 1, target: 330},
-    ]
-  },
-  moveToTrain: { 
-    'arm-1': [
-      {channel: 0, target: 355},
+      {channel: 0, target: 366},
       {channel: 1, target: 360},
-      {channel: 2, target: 340},
+      {channel: 2, target: 328},
+      {channel: 3, target: 495},
+      {channel: 4, target: 367},
+      {channel: 5, target: 330},
+    ]
+  },
+  movePayloadUp: {
+    'arm-1': [
+      {channel: 1, target: 401},
+    ]
+  },
+  movePayloadToTrain: {
+    'arm-1': [
+      {channel: 0, target: 328},
+      {channel: 1, target: 380},
+      {channel: 2, target: 362},
+      {channel: 3, target: 495},
+      {channel: 4, target: 337},
+    ]
+  },
+  lowerOnTrain: {
+    'arm-1':[
+      {channel: 1, target: 340},
     ]
   },
   dropOnTrain: {
     'arm-1':[
-      {channel: 1, target: 340},
-      {channel: 2, target: 320},
-      {channel: 5, target: 310},
+      {channel: 5, target: 330},
     ]
   }
 }
@@ -124,7 +145,8 @@ module.exports = class ARM {
   positionToCapturePicture() {
     LOG.debug('Moving to capture picture');
     // Move above object, lower arm, rotate wrist and open claw
-    return this.setTargets(TARGETS.positionToCapturePicture[this.hostname]);
+    return this.setTargets(TARGETS.positionToCapturePicture[this.hostname])
+      .then(() => sleep(2.5));
   }
 
   capturePicture() {
@@ -138,7 +160,7 @@ module.exports = class ARM {
   grabAndTransferPayload(eventData) {
     LOG.debug('Grabing and tranfering payload');
     var movePickupPayload;
-    var foundItem = false; 
+    var foundItem = false;
     const probabilities = JSON.parse(eventData.Prediction__c).probabilities;
 
     probabilities.forEach(probability => {
@@ -167,21 +189,27 @@ module.exports = class ARM {
     }
 
     return this.setTargets(movePickupPayload)
-      .then(() => sleep(7))
+      .then(() => sleep(7.5))
 
       .then(() => this.setTargets(TARGETS.closeClaw[this.hostname]))
       .then(() => sleep(2))
 
-      .then(() => this.setTargets(TARGETS.moveToTrain[this.hostname]))
-      .then(() => sleep(6))
+      .then(() => this.setTargets(TARGETS.movePayloadUp[this.hostname]))
+      .then(() => sleep(2))
+
+      .then(() => this.setTargets(TARGETS.movePayloadToTrain[this.hostname]))
+      .then(() => sleep(5))
+
+      .then(() => this.setTargets(TARGETS.lowerOnTrain[this.hostname]))
+      .then(() => sleep(3))
 
       .then(() => this.setTargets(TARGETS.dropOnTrain[this.hostname]))
       .then(() => sleep(2))
+      .then(() => this.setTargets(TARGETS.movePayloadUp[this.hostname]))
+      .then(() => sleep(0.5))
 
       .then(() => this.goHome())
   }
-
-  
 
   setTarget(channel, target) {
     return this.driver.setPWM(channel, 0, target);
