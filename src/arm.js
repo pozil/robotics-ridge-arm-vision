@@ -177,7 +177,7 @@ module.exports = class ARM {
         case 'plastic':
           movePickupPayload = TARGETS.movePayloadPlastic[this.hostname];
         break;
-        case 'plastic':
+        case 'metal':
           movePickupPayload = TARGETS.movePayloadMetal[this.hostname];
         break;
       }
