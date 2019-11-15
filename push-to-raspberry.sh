@@ -1,4 +1,4 @@
-IP="10.102.134.232"
-TARGET_PATH="robotics-ridge-arm-vision/"
+IP="172.16.29.131"
+TARGET_PATH="arm-control/"
 
 scp -r * pi@$IP:$TARGET_PATH

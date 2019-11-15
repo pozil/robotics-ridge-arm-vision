@@ -1,126 +1,109 @@
-require('dotenv').config();
-const Winston = require('winston'),
-  httpClient = require("request"),
-  ARM = require('./arm'),
-  SalesforcePlatform = require('./salesforce-platform'),
-  os = require('os');
-
-let HOSTNAME = process.env.hostname || os.hostname();
-if (HOSTNAME !== 'arm-1' && HOSTNAME !== 'arm-2') {
-  console.log(`WARNING: invalid hostname ${HOSTNAME}. Falling back to arm-1`);
-  HOSTNAME = 'arm-1';
-}
-
-// Configure logs
-Winston.loggers.add('App', {
-  console: { level: 'info', colorize: true, label: 'App' }
-});
-const LOG = Winston.loggers.get('App');
-
-Winston.default.transports.console.level='debug';
-Winston.loggers.get('App').transports.console.level='debug';
-Winston.loggers.get('ARM').transports.console.level='debug';
-Winston.loggers.get('SFDC').transports.console.level='debug';
-Winston.loggers.get('COMETD').transports.console.level='info';
-
-const sfdc = new SalesforcePlatform(HOSTNAME);
-const isMockArm = process.env.isMockArm;
-const arm = new ARM(HOSTNAME, isMockArm);
-
-let isShuttingDown = false;
-shutdown = () => {
-  if (isShuttingDown) {
-    return;
-  }
-  isShuttingDown = true;
-  console.log("\nGracefully shutting down from SIGINT (Ctrl-C) or SIGTERM");
-  Promise.all([
-    sfdc.disconnect(),
-    arm.disconnect()
-  ]).then(process.exit(0))
-  .catch(error => {
-    LOG.error(error);
-    process.exit(-1);
-  });
-}
-
-// Process hooks
-process.on('warning', e => console.warn(e.stack));
-process.on('unhandledRejection', (reason, p) => {
-    LOG.error('Unhandled Rejection at: Promise', p, 'reason:', reason);
-});
-process.once('SIGINT', shutdown);
-process.once('SIGTERM', shutdown);
+import getLogger from './utils/logger.js';
+import Configuration from './utils/configuration.js';
+import { getHostname, getIp } from './utils/network.js';
+import SalesforceClient from './utils/salesforceClient';
+import Arm from './devices/arm';
 
 const EVENT_ARM_PICKUP_REQUESTED = 'ARM_Pickup_Requested';
 const EVENT_ARM_PICKUP_CONFIRMED = 'ARM_Pickup_Confirmed';
 const EVENT_ARM_PICKUP_REJECTED = 'ARM_Pickup_Rejected';
 
-waitForInternetThenStartApp = () => {
-  httpClient.get({url: 'https://status.salesforce.com/status', timeout: 5000}, (error, response, body) => {
-    if (!response || response.statusCode !== 404) {
-      LOG.warn('No internet connection available, retrying...');
-      waitForInternetThenStartApp();
-    } else {
-      startApp();
+const logger = getLogger('App');
+
+// Load and check config
+if (!Configuration.isValid()) {
+  logger.error(
+      'Cannot start app: missing mandatory configuration. Check your .env file.'
+  );
+  process.exit(-1);
+}
+
+var device = null;
+const arm = new Arm();
+const sfdc = new SalesforceClient();
+
+// Node process hooks
+process.on('warning', e => logger.warn(e.stack));
+process.on('unhandledRejection', async (reason, p) => {
+    logger.error(`'Unhandled Rejection at: Promise ${JSON.stringify(p)}`);
+    if (reason) {
+        logger.error('Reason: ', reason);
     }
-  });
-}
+    await shutdown();
+    process.exit(-1);
+});
+process.once('SIGINT', async () => {
+    logger.info('Gracefully shutting down from SIGINT (Ctrl-C)');
+    await shutdown();
+    process.exit(0);
+});
 
-startApp = () => {
-  return Promise.all([
-    sfdc.init(onPlatformEvent),
-    arm.init()
-  ]).catch(error => {
-    LOG.error(error);
-  });
-}
-
-onPlatformEvent = platformEvent => {
-  // Ignore events from other feeds
-  const eventData = platformEvent.data.payload;
-  if (eventData.Feed_Id__c !== process.env.feedId) {
-    return;
+async function shutdown() {
+  try {
+    await arm.disconnect();
   }
-  // Process event
+  catch (e) {}
+}
+
+async function startApp() {
+    logger.info('Starting up');
+
+    // Connect arm
+    await arm.connect();
+
+    // Connect to Salesforce
+    try {
+        await sfdc.connect();
+    } catch (error) {
+        logger.error('Failed to connect to Salesforce org ', error);
+        process.exit(-1);
+    }
+
+    // Retrieve device
+    device = await sfdc.getDeviceFromHostname(getHostname());
+
+    // Subscribe to robot platform event
+    sfdc.subscribeToStreamingEvent('/event/Robot_Event__e', handleRobotEvent);
+
+    // Update device IP
+    sfdc.updateDeviceIp(device.Id, getIp());
+}
+
+
+function handleRobotEvent(event) {
+  const eventData = event.payload;
+  logger.info(`Incoming robot event ${JSON.stringify(eventData)}`);
   switch (eventData.Event__c) {
     case EVENT_ARM_PICKUP_REQUESTED:
-      onArmPickupRequested(eventData);
+      onPickupRequested();
     break;
     case EVENT_ARM_PICKUP_CONFIRMED:
-      onArmPickupConfirmed(eventData);
+      onPickupConfirmed(eventData);
     break;
     case EVENT_ARM_PICKUP_REJECTED:
-      onArmPickupRejected();
+      onPickupRejected();
     break;
   }
 }
 
-onArmPickupRequested = eventData => {
-  arm.positionToCapturePicture()
-  .then(() => arm.capturePicture())
-  .then(picture => sfdc.uploadPicture(picture))
-  .catch(error => {
-    LOG.error(error);
-  });
+async function onPickupRequested() {
+  await arm.positionToCapturePicture();
+  const picture = await arm.capturePicture();
+  return sfdc.uploadPicture(device.Id, picture);
 }
 
-onArmPickupConfirmed = (eventData) => {
-  arm.grabAndTransferPayload(eventData)
-  .then(() => sfdc.notifyPickup('ARM_Pickup_Completed'))
-  .then(() => arm.goHome())
-  .catch(error => {
-    LOG.error(error);
+async function onPickupConfirmed(eventData) {
+  await arm.grabAndTransferPayload(eventData);
+  await sfdc.publishPlatformEvent({
+    Event__c: 'ARM_Pickup_Completed',
+    Device_Id__c: device.Id,
+    Feed_Id__c: device.Feed__c
   });
+  return arm.goHome();
 }
 
-onArmPickupRejected = () => {
-  arm.goHome()
-  .catch(error => {
-    LOG.error(error);
-  });
+async function onPickupRejected() {
+  return arm.goHome();
 }
 
-// Wait for internet access then start app
-LOG.info('Checking internet connection...');
-waitForInternetThenStartApp();
+startApp();

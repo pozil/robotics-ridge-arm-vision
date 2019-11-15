@@ -1,24 +1,37 @@
 {
   "name": "robotics-ridge-arm-vision",
+  "private": true,
   "version": "1.0.0",
   "author": "Philippe Ozil",
-  "description": "TDX18 Robotics - ARM vision running on Raspberry Pi",
-  "private": true,
-  "engines": {
-    "node": "8.9.x"
+  "description": "ARM vision running on Raspberry Pi",
+  "main": "dist/bundle.cjs.js",
+  "module": "dist/bundle.esm.js",
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "start": "node dist/bundle.esm.js",
+    "test": "jest",
+    "pretest": "npm run build"
   },
-  "main": "index.js",
   "dependencies": {
-    "adafruit-i2c-pwm-driver-async": "^1.0.0",
-    "cometd-node-promise-client": "^1.1.2",
+    "adafruit-i2c-pwm-driver-async": "^1.1.0",
     "dotenv": "^5.0.1",
+    "jsforce": "^1.9.3",
     "node-raspistill": "0.0.14",
     "request": "^2.87.0",
-    "salesforce-node-client": "^1.2.2",
-    "winston": "^2.4.3"
+    "winston": "^3.2.1",
+    "@abandonware/i2c": "^0.2.4-0"
   },
-  "scripts": {
-    "start": "node src/app.js"
+  "devDependencies": {
+    "@babel/cli": "^7.7.0",
+    "@babel/core": "^7.7.2",
+    "@babel/preset-env": "^7.7.1",
+    "jest": "^24.9.0",
+    "rollup": "^1.27.0",
+    "rollup-plugin-node-resolve": "^4.2.4"
+  },
+  "engines": {
+    "node": ">=10.15.0"
   },
   "repository": {
     "type": "git",
