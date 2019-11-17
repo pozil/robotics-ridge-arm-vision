@@ -47,7 +47,7 @@ export default class Arm {
     logger.info('Moving to capture picture');
     // Move above object, lower arm, rotate wrist and open claw
     await this.setTargets(TARGETS.positionToCapturePicture[this.hostname]);
-    return sleep(2.5);
+    return sleep(3);
   }
 
   async capturePicture() {
